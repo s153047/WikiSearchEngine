@@ -18,8 +18,10 @@ class Index1 {
     public Index1(String filename) {
         String word;
         WikiItem current, tmp;
+        
         try {
-            Scanner input = new Scanner(new File(filename), "UTF-8");
+        	Scanner input = new Scanner(new File(filename), "UTF-8");    
+            
             word = input.next();
             start = new WikiItem(word, null);
             current = start;
