@@ -1,4 +1,6 @@
+import java.awt.List;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
  
 class Index1 {
@@ -38,29 +40,44 @@ class Index1 {
         }
     }
  
-    public boolean search(String searchstr) {
+    public ArrayList<String> search(String searchstr) {
         WikiItem current = start;
+        String doc = start.str;
+        ArrayList<String> listOfDocs = new ArrayList<String>();
         while (current != null) {
-            if (current.str.equals(searchstr)) {
-                return true;
+        	if (current.str.equals("---END.OF.DOCUMENT---") && current.next!=null){
+        		doc = current.next.str;
+        	}
+            
+        	if (current.str.equals(searchstr) && !listOfDocs.contains(doc)) {
+            	listOfDocs.add(doc);
+            	while(current != null){
+            		if((current.next.str.equals("---END.OF.DOCUMENT---"))){
+            			break;
+            		}
+            		current = current.next;
+            	}
             }
             current = current.next;
         }
-        return false;
+        return listOfDocs;
     }
  
     public static void main(String[] args) {
         System.out.println("Preprocessing " + args[0]);
         Index1 i = new Index1(args[0]);
         Scanner console = new Scanner(System.in);
+        ArrayList<String> searchString = new ArrayList<String>();
         for (;;) {
             System.out.println("Input search string or type exit to stop");
             String searchstr = console.nextLine();
             if (searchstr.equals("exit")) {
                 break;
             }
-            if (i.search(searchstr)) {
-                System.out.println(searchstr + " exists");
+            searchString = i.search(searchstr);
+            if (!searchString.isEmpty()) {
+                System.out.println(searchstr + " exists in documents: " + searchString);
+                
             } else {
                 System.out.println(searchstr + " does not exist");
             }
