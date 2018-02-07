@@ -2,9 +2,13 @@ import java.io.*;
 import java.util.Scanner;
  
 class Index1 {
- 
+	public enum Setting{
+		normal, pre, search 
+	}
+	
+	static Setting setting = Setting.search;
     WikiItem start;
- 
+    
     private class WikiItem {
         String str;
         WikiItem next;
@@ -23,11 +27,14 @@ class Index1 {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
             word = input.next();
+            word = word.replace(".","");
+            word = word.replace(",","");
             start = new WikiItem(word, null);
             current = start;
             while (input.hasNext()) {   // Read all words in input
                 word = input.next();
-                System.out.println(word);
+                word = word.replace(".","");
+                word = word.replace(",","");
                 tmp = new WikiItem(word, null);
                 current.next = tmp;
                 current = tmp;
@@ -49,7 +56,7 @@ class Index1 {
         return false;
     }
  
-    public static void main(String[] args) {
+    public static void normal(String[] args) {
         System.out.println("Preprocessing " + args[0]);
         Index1 i = new Index1(args[0]);
         Scanner console = new Scanner(System.in);
@@ -66,5 +73,43 @@ class Index1 {
             }
         }
         console.close();
+    }
+ 
+    public static void preprocessTest(String[] args){
+    	System.out.println("Preprocessing " + args[0] + " 1000 times");
+    	long time, totalTime = 0;
+    	for(int j = 0; j<1000; j++){
+    		time = System.currentTimeMillis();
+            Index1 i = new Index1(args[0]);
+            totalTime += System.currentTimeMillis() - time;
+    	}
+        System.out.println("Preprocessing time: " + totalTime);
+    }
+    
+    public static void searchTest(String[] args){
+    	long time, totalTime = 0;
+    	Index1 i = new Index1(args[0]);
+        totalTime = 0;
+        System.out.println("Searching 10000 times");
+        for(int j = 0; j<10000; j++){
+    		time = System.currentTimeMillis();
+    		i.search("%&/");
+            totalTime += System.currentTimeMillis() - time;
+    	}
+        System.out.println("Search time: " + totalTime);
+    }
+    
+    public static void main(String[] args) {
+    	switch(setting) {
+    		case normal : 
+    			normal(args);
+    			break;
+    		case pre :
+    			preprocessTest(args);
+    			break;
+    		case search :
+    			searchTest(args);
+    			break;
+    	}
     }
 }
