@@ -25,10 +25,12 @@ class Index1 {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
             word = input.next();
+            word = word.replace(".", "");
             start = new WikiItem(word, null);
             current = start;
             while (input.hasNext()) {   // Read all words in input
                 word = input.next();
+                word = word.replace(".", "");
                 System.out.println(word);
                 tmp = new WikiItem(word, null);
                 current.next = tmp;
@@ -44,22 +46,26 @@ class Index1 {
         WikiItem current = start;
         String doc = start.str;
         ArrayList<String> listOfDocs = new ArrayList<String>();
+        
         while (current != null) {
-        	if (current.str.equals("---END.OF.DOCUMENT---") && current.next!=null){
+        	if (current.str.equals("---ENDOFDOCUMENT---") && current.next!=null){
         		doc = current.next.str;
         	}
             
         	if (current.str.equals(searchstr) && !listOfDocs.contains(doc)) {
+        		
             	listOfDocs.add(doc);
-            	while(current != null){
-            		if((current.next.str.equals("---END.OF.DOCUMENT---"))){
+            	while(current.next != null){
+            		if((current.next.str.equals("---ENDOFDOCUMENT---"))){
             			break;
             		}
             		current = current.next;
+            		
             	}
             }
             current = current.next;
         }
+        
         return listOfDocs;
     }
  
