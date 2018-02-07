@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
  
 class Index1 {
- 
+	public enum Setting{
+		normal, pre, search 
+	}
+	
+	static Setting setting = Setting.search;
     WikiItem start;
  
     private class WikiItem {
@@ -31,7 +35,6 @@ class Index1 {
             while (input.hasNext()) {   // Read all words in input
                 word = input.next();
                 word = word.replace(".", "");
-                System.out.println(word);
                 tmp = new WikiItem(word, null);
                 current.next = tmp;
                 current = tmp;
@@ -80,11 +83,8 @@ class Index1 {
             if (searchstr.equals("exit")) {
                 break;
             }
-            if (i.search(searchstr)) {
-                System.out.println(searchstr + " exists");
-            } else {
-                System.out.println(searchstr + " does not exist");
-            }
+            i.search(searchstr);
+          
         }
         console.close();
     }
