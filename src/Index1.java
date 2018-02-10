@@ -8,7 +8,7 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.pre;
+	static Setting setting = Setting.search;
     WikiItem start;
  
     private class WikiItem {
