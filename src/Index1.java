@@ -6,7 +6,7 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.search;
+	static Setting setting = Setting.normal;
     WikiItem start;
     
     private class WikiItem {
@@ -27,14 +27,12 @@ class Index1 {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
             word = input.next();
-            word = word.replace(".","");
-            word = word.replace(",","");
+            word = word.replaceAll("[^A-Za-z0-9]", "");
             start = new WikiItem(word, null);
             current = start;
             while (input.hasNext()) {   // Read all words in input
                 word = input.next();
-                word = word.replace(".","");
-                word = word.replace(",","");
+                word = word.replaceAll("[^A-Za-z0-9]", "");
                 tmp = new WikiItem(word, null);
                 current.next = tmp;
                 current = tmp;
