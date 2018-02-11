@@ -6,7 +6,7 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.normal;
+	static Setting setting = Setting.pre;
     WikiItem start;
     
     private class WikiItem {
@@ -74,14 +74,26 @@ class Index1 {
     }
  
     public static void preprocessTest(String[] args){
-    	System.out.println("Preprocessing " + args[0] + " 1000 times");
     	long time, totalTime = 0;
-    	for(int j = 0; j<1000; j++){
-    		time = System.currentTimeMillis();
-            Index1 i = new Index1(args[0]);
-            totalTime += System.currentTimeMillis() - time;
+    	int numRuns = 50;
+    	int[] runTime = new int[numRuns];
+    	
+    	System.out.println("Preprocessing " + args[0]);
+    	
+    	for(int h = 1; h<numRuns; h++){
+    		totalTime = 0;
+    		for(int j = 1; j<h*h; j++){
+        		time = System.currentTimeMillis();
+                Index1 i = new Index1(args[0]);
+                runTime[h] += System.currentTimeMillis() - time;
+        	}
     	}
-        System.out.println("Preprocessing time: " + totalTime);
+    	
+        System.out.println("Preprocessing time: " );
+        for(int j = 1; j < numRuns; j++){
+        	//System.out.println(j*j + " : " + runTime[j]);
+        	System.out.println(runTime[j]);
+        }
     }
     
     public static void searchTest(String[] args){
