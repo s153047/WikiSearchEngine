@@ -8,7 +8,7 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.search;
+	static Setting setting = Setting.normal;
     WikiItem start;
  
     private class WikiItem {
@@ -29,12 +29,12 @@ class Index1 {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
             word = input.next();
-            word = word.replace(".", "");
+            word = word.replaceAll("[^A-Za-z0-9]", "");
             start = new WikiItem(word, null);
             current = start;
             while (input.hasNext()) {   // Read all words in input
                 word = input.next();
-                word = word.replace(".", "");
+                word = word.replaceAll("[^A-Za-z0-9]", "");
                 tmp = new WikiItem(word, null);
                 current.next = tmp;
                 current = tmp;
@@ -51,7 +51,7 @@ class Index1 {
         ArrayList<String> listOfDocs = new ArrayList<String>();
         
         while (current != null) {
-        	if (current.str.equals("---ENDOFDOCUMENT---") && current.next!=null){
+        	if (current.str.equals("ENDOFDOCUMENT") && current.next!=null){
         		doc = current.next.str;
         	}
             
@@ -59,7 +59,7 @@ class Index1 {
         		
             	listOfDocs.add(doc);
             	while(current.next != null){
-            		if((current.next.str.equals("---ENDOFDOCUMENT---"))){
+            		if((current.next.str.equals("ENDOFDOCUMENT"))){
             			break;
             		}
             		current = current.next;
@@ -83,7 +83,7 @@ class Index1 {
             if (searchstr.equals("exit")) {
                 break;
             }
-            i.search(searchstr);
+            System.out.println(i.search(searchstr));
           
         }
         console.close();
