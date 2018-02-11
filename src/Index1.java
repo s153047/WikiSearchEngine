@@ -60,6 +60,7 @@ class Index1 {
             	listOfDocs.add(doc);
             	while(current.next != null){
             		if((current.next.str.equals("ENDOFDOCUMENT"))){
+            			
             			break;
             		}
             		current = current.next;
