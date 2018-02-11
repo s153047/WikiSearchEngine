@@ -75,7 +75,7 @@ class Index1 {
  
     public static void preprocessTest(String[] args){
     	long time, totalTime = 0;
-    	int numRuns = 50;
+    	int numRuns = 100;
     	int[] runTime = new int[numRuns];
     	
     	System.out.println("Preprocessing " + args[0]);
@@ -98,15 +98,30 @@ class Index1 {
     
     public static void searchTest(String[] args){
     	long time, totalTime = 0;
+    	int numRuns = 100;
+    	int[] runTime = new int[numRuns];
+    	
+    	for(int j = 1; j < numRuns; j++){
+        	//System.out.println(j*j + " : " + runTime[j]);
+        	System.out.println(j*j);
+        }
+    	
     	Index1 i = new Index1(args[0]);
+    	
         totalTime = 0;
-        System.out.println("Searching 10000 times");
-        for(int j = 0; j<10000; j++){
-    		time = System.currentTimeMillis();
-    		i.search("%&/");
-            totalTime += System.currentTimeMillis() - time;
-    	}
-        System.out.println("Search time: " + totalTime);
+        System.out.println("Searching: ");
+        for(int h = 1; h<numRuns; h++){
+    		totalTime = 0;
+    		for(int j = 1; j<h*h; j++){
+    			time = System.currentTimeMillis();
+        		i.search("%&/");
+                runTime[h] += System.currentTimeMillis() - time;
+        	}
+        }
+        for(int j = 1; j < numRuns; j++){
+        	//System.out.println(j*j + " : " + runTime[j]);
+        	System.out.println(runTime[j]);
+        }
     }
     
     public static void main(String[] args) {
