@@ -53,12 +53,20 @@ class Index1 {
                 word = word.replaceAll("[^A-Za-z0-9]", "");
                 current2 = startW;
                
+                
+                if(word.equals("ENDOFDOCUMENT") && input.hasNext()){
+                	word = input.next();
+                	word = word.replaceAll("[^A-Za-z0-9]", "");
+                	document = word;
+                }
+                	
+                
                 while(current2 != null){
                 	if(current2.str.equals(word)){ // 1: den er i listen
                 		// add til docList, hvis den ikke er der
                 		currentD = current2.docs; // TODO: fix hvis currentD er null
                 		while(currentD.next != null){
-                			if(currentD.str ==document)
+                			if(currentD.str.contains(document))
                 				break;
                 			
                 			currentD = currentD.next;
@@ -68,7 +76,9 @@ class Index1 {
                 		
                 		break;
                 	}
-                	//Hvis ordet ikke er i den første liste endnu
+                	
+                	
+                	// 2: Hvis ordet ikke er i den første liste endnu
                 	if(current2.next ==null){
                 		current.next = new WikiItem(word,new DocItem(document,null),null);
                 		current = current.next;
@@ -77,6 +87,13 @@ class Index1 {
                 	current2 = current2.next;
                 }
             }
+            currentD = startW.next.next.next.docs;
+            
+            while(currentD != null){
+            	System.out.print(currentD.str+ ", ");
+            	currentD = currentD.next;
+            }
+            System.out.println();
             
             input.close();
         } catch (FileNotFoundException e) {
@@ -117,8 +134,6 @@ class Index1 {
     public static void preprocessTest(String[] args){
     	long time, totalTime = 0;
     	int[] runTime = new int[numFiles];
-    	
-    	
     	
     	for(int h = 0; h < numFiles; h++){
     		System.out.println("Preprocessing " + args[h]);
