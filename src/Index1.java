@@ -8,7 +8,9 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.search;
+	static Setting setting = Setting.pre;
+	static int numFiles = 3;
+	static int numRuns = 10;
     WikiItem start;
  
     private class WikiItem {
@@ -91,24 +93,25 @@ class Index1 {
     }
  
     public static void preprocessTest(String[] args){
-    	
     	long time, totalTime = 0;
-    	int numRuns = 50;
-    	int[] runTime = new int[numRuns];
+    	int[] runTime = new int[numFiles];
     	
-    	System.out.println("Preprocessing " + args[0]);
     	
-    	for(int h = 1; h<numRuns; h++){
+    	
+    	for(int h = 0; h < numFiles; h++){
+    		System.out.println("Preprocessing " + args[h]);
     		totalTime = 0;
-    		for(int j = 1; j<h*h; j++){
-        		time = System.currentTimeMillis();
-                Index1 i = new Index1(args[0]);
-                runTime[h] += System.currentTimeMillis() - time;
+    		
+    		for(int j = 0; j<numRuns; j++){
+    			time = System.currentTimeMillis();
+                Index1 i = new Index1(args[h]);
+                totalTime += System.currentTimeMillis() - time;
         	}
+    		runTime[h] = ((int) totalTime)/numRuns;
     	}
     	
         System.out.println("Preprocessing time: " );
-        for(int j = 1; j < numRuns; j++){
+        for(int j = 0; j < numFiles; j++){
         	//System.out.println(j*j + " : " + runTime[j]);
         	System.out.println(runTime[j]);
         }
@@ -116,24 +119,21 @@ class Index1 {
     
     public static void searchTest(String[] args){
     	long time, totalTime = 0;
-    	int numRuns = 50;
-    	int[] runTime = new int[numRuns];
-    	
-    	Index1 i = new Index1(args[0]);
-    	
-        totalTime = 0;
-        System.out.println("Searching: ");
-        for(int h = 1; h<numRuns; h++){
-    		totalTime = 0;
-    		for(int j = 1; j<h*h; j++){
-    			time = System.currentTimeMillis();
-        		i.search("%&/");
-                runTime[h] += System.currentTimeMillis() - time;
-        	}
-    	}
+    	long[] runTime = new long[numFiles];
         
-        System.out.println("Search time: ");
-        for(int j = 1; j < numRuns; j++){
+        
+        for(int h = 0; h < numFiles; h++){
+        	Index1 i = new Index1(args[h]);
+        	System.out.println("Searching: " + args[h]);
+    		totalTime = 0;
+    		for(int j = 0; j< numRuns; j++){
+    			time = System.currentTimeMillis();
+        		i.search("%&/¤#%&¤/(%");
+                totalTime+= System.currentTimeMillis() - time;
+        	}
+    		runTime[h] = ( totalTime) / (long) numRuns; 
+        }
+        for(int j = 0; j < numFiles; j++){
         	//System.out.println(j*j + " : " + runTime[j]);
         	System.out.println(runTime[j]);
         }
