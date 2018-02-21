@@ -6,39 +6,78 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.search;
+	static Setting setting = Setting.normal;
 	static int numRuns = 100;
 	static int numFiles = 7;
-    WikiItem start;
+    WikiItem startW;
     
     private class WikiItem {
         String str;
+        DocItem docs;
         WikiItem next;
  
-        WikiItem(String s, WikiItem n) {
+        WikiItem(String s,DocItem d, WikiItem n) {
             str = s;
+            docs = d;
             next = n;
         }
     }
+    
+    private class DocItem{
+    	String str;
+    	DocItem next;
+    	
+    	DocItem(String s, DocItem n){
+    		str = s;
+    		next = n;
+    	}
+    }
  
     public Index1(String filename) {
-        String word;
-        WikiItem current, tmp;
+        String word,document;
+        WikiItem current,current2, tmp;
+        DocItem currentD;
         
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
             word = input.next();
             word = word.replaceAll("[^A-Za-z0-9]", "");
-            start = new WikiItem(word, null);
-            current = start;
+            document = word;
+            startW = new WikiItem(word,new DocItem(document,null), null);
+            current = startW;
             while (input.hasNext()) {   // Read all words in input
+            	// 1: den er i listen
+            	// 2: den er ikke i listen
                 word = input.next();
                 word = word.replaceAll("[^A-Za-z0-9]", "");
-                tmp = new WikiItem(word, null);
-                current.next = tmp;
-                current = tmp;
+                current2 = startW;
+               
+                while(current2 != null){
+                	if(current2.str.equals(word)){ // 1: den er i listen
+                		// add til docList, hvis den ikke er der
+                		currentD = current2.docs; // TODO: fix hvis currentD er null
+                		while(currentD.next != null){
+                			if(currentD.str ==document)
+                				break;
+                			
+                			currentD = currentD.next;
+                		}
+                		if(currentD.next == null)
+                			currentD.next = new DocItem(document, null);
+                		
+                		break;
+                	}
+                	//Hvis ordet ikke er i den første liste endnu
+                	if(current2.next ==null){
+                		current.next = new WikiItem(word,new DocItem(document,null),null);
+                		current = current.next;
+                		break;
+                	}
+                	current2 = current2.next;
+                }
             }
+            
             input.close();
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
@@ -46,7 +85,7 @@ class Index1 {
     }
  
     public boolean search(String searchstr) {
-        WikiItem current = start;
+        WikiItem current = startW;
         while (current != null) {
             if (current.str.equals(searchstr)) {
                 return true;
