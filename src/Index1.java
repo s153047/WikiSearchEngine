@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
  
 class Index1 {
@@ -47,7 +48,8 @@ class Index1 {
             startW = new WikiItem(word,new DocItem(document,null), null);
             current = startW;
             while (input.hasNext()) {   // Read all words in input
-            	// 1: den er i listen
+            	// Der er to muligheder:
+            	// 1: den er i den første liste
             	// 2: den er ikke i listen
                 word = input.next();
                 word = word.replaceAll("[^A-Za-z0-9]", "");
@@ -64,15 +66,17 @@ class Index1 {
                 while(current2 != null){
                 	if(current2.str.equals(word)){ // 1: den er i listen
                 		// add til docList, hvis den ikke er der
-                		currentD = current2.docs; // TODO: fix hvis currentD er null
-                		while(currentD.next != null){
-                			if(currentD.str.contains(document))
+                		currentD = current2.docs; 
+                		while(true){
+                			if(currentD.str.equals(document))
                 				break;
+                			
+                			if(currentD.next == null){
+                				currentD.next = new DocItem(document, null);
+                			}
                 			
                 			currentD = currentD.next;
                 		}
-                		if(currentD.next == null)
-                			currentD.next = new DocItem(document, null);
                 		
                 		break;
                 	}
@@ -87,29 +91,26 @@ class Index1 {
                 	current2 = current2.next;
                 }
             }
-            currentD = startW.next.next.next.docs;
-            
-            while(currentD != null){
-            	System.out.print(currentD.str+ ", ");
-            	currentD = currentD.next;
-            }
-            System.out.println();
-            
             input.close();
+            
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
         }
     }
  
-    public boolean search(String searchstr) {
+    public ArrayList search(String searchstr) {
         WikiItem current = startW;
+        ArrayList<String> list = new ArrayList<String>();
         while (current != null) {
             if (current.str.equals(searchstr)) {
-                return true;
+                for(DocItem doc = current.docs ; doc != null; doc = doc.next){
+                	list.add(doc.str);
+                }
+            	break;
             }
             current = current.next;
         }
-        return false;
+        return list;
     }
  
     public static void normal(String[] args) {
@@ -122,11 +123,8 @@ class Index1 {
             if (searchstr.equals("exit")) {
                 break;
             }
-            if (i.search(searchstr)) {
-                System.out.println(searchstr + " exists");
-            } else {
-                System.out.println(searchstr + " does not exist");
-            }
+            System.out.println(i.search(searchstr));
+            
         }
         console.close();
     }
