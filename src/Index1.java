@@ -10,7 +10,9 @@ class Index1 {
 	static Setting setting = Setting.normal;
 	static int numRuns = 100;
 	static int numFiles = 7;
-    WikiItem startW;
+    String document;
+    int HashTableSize = 100;
+    HashTable currentHashTable;
     
     private class WikiItem {
         String str;
@@ -32,12 +34,71 @@ class Index1 {
     		str = s;
     		next = n;
     	}
+    	
+    	public DocItem getLast(){
+    		DocItem current = this;
+    		while(current.next != null){
+    			current = current.next;
+    		}
+    		return current;
+    	}
     }
- 
+    
+    private class HashTable{
+    	private final int size;
+    	private int n = 0;
+    	WikiItem[] table; 
+    	HashTable(int s){
+    		size = s;
+    		table = new WikiItem[size];
+    		for(int i = 0; i < size; i++){
+    			table[i] = null;
+    		}
+    	}
+    	
+    	public void insert(String word){								// 3 situationer:
+    		WikiItem currentWikiItem = get(word); 
+    		
+    		if(currentWikiItem == null){ 								// den's key er ikke i hashTable
+    			n++;
+    			table[(word.hashCode() & 0x7fffffff) % size] = new WikiItem(word,new DocItem(document,null), null);			
+    		} else {
+    			while(true){
+    				if(currentWikiItem.str.equals(word)){					// den er i hashTable
+    					DocItem currentDocItem = currentWikiItem.docs; 
+    					while(currentDocItem != null){
+    						if(currentDocItem.str.equals(document)){
+    							return;
+    						}
+    						if(currentDocItem.next == null){
+    							currentDocItem.next = new DocItem(document,null);
+    						}
+    						currentDocItem = currentDocItem.next;
+    					}
+    				}
+    				if(currentWikiItem.next == null) {				// den er ikke i hashTable
+    					n++;
+    					currentWikiItem.next = new WikiItem(word,new DocItem(document,null), null);
+    					return;
+    				}
+    				currentWikiItem = currentWikiItem.next;
+    			}
+    		}
+    	}
+    	
+    	public WikiItem get(String word){
+    		return table[(word.hashCode() & 0x7fffffff) % size];
+    	}
+    	
+    	public WikiItem getIndex(int i){
+    		return table[i];
+    	}
+    	
+    }
+    
     public Index1(String filename) {
-        String word,document;
-        WikiItem current,current2, tmp;
-        DocItem currentD;
+        String word;
+
         
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
@@ -45,53 +106,36 @@ class Index1 {
             word = input.next();
             word = word.replaceAll("[^A-Za-z0-9]", "");
             document = word;
-            startW = new WikiItem(word,new DocItem(document,null), null);
-            current = startW;
-            while (input.hasNext()) {   // Read all words in input
-            	// Der er to muligheder:
-            	// 1: den er i den første liste
-            	// 2: den er ikke i listen
+            
+            currentHashTable = new HashTable(HashTableSize);
+            currentHashTable.insert(word);
+            
+            while (input.hasNext()) {  
                 word = input.next();
                 word = word.replaceAll("[^A-Za-z0-9]", "");
-                current2 = startW;
-               
                 
                 if(word.equals("ENDOFDOCUMENT") && input.hasNext()){
                 	word = input.next();
                 	word = word.replaceAll("[^A-Za-z0-9]", "");
                 	document = word;
                 }
-                	
-                
-                while(current2 != null){
-                	if(current2.str.equals(word)){ // 1: den er i listen
-                		// add til docList, hvis den ikke er der
-                		currentD = current2.docs; 
-                		while(true){
-                			if(currentD.str.equals(document))
-                				break;
-                			
-                			if(currentD.next == null){
-                				currentD.next = new DocItem(document, null);
-                			}
-                			
-                			currentD = currentD.next;
-                		}
-                		
-                		break;
-                	}
-                	
-                	
-                	// 2: Hvis ordet ikke er i den første liste endnu
-                	if(current2.next ==null){
-                		current.next = new WikiItem(word,new DocItem(document,null),null);
-                		current = current.next;
-                		break;
-                	}
-                	current2 = current2.next;
-                }
+            	currentHashTable.insert(word);
             }
+            /*
+            String s = "letter";
+            WikiItem current = currentHashTable.get(s);
+            while(current!=null){
+            	if(current.str.equals(s)){
+            		System.out.println(current.docs.str);
+            		break;
+            	}
+            	current=current.next;
+            }*/
+            
+            System.out.println(currentHashTable.n);
+            
             input.close();
+            
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
@@ -99,17 +143,16 @@ class Index1 {
     }
  
     public ArrayList search(String searchstr) {
-        WikiItem current = startW;
-        ArrayList<String> list = new ArrayList<String>();
-        while (current != null) {
-            if (current.str.equals(searchstr)) {
-                for(DocItem doc = current.docs ; doc != null; doc = doc.next){
+    	WikiItem currentWikiItem = currentHashTable.get(searchstr);
+    	 ArrayList<String> list = new ArrayList<String>();
+    	while(currentWikiItem != null){
+			if(currentWikiItem.str.equals(searchstr)){
+				for(DocItem doc = currentWikiItem.docs ; doc != null; doc = doc.next){
                 	list.add(doc.str);
                 }
-            	break;
-            }
-            current = current.next;
-        }
+			}
+			currentWikiItem = currentWikiItem.next;
+		}
         return list;
     }
  
