@@ -11,7 +11,6 @@ class Index1 {
 	static int numRuns = 100;
 	static int numFiles = 7;
     String document;
-    int HashTableSize = 100;
     HashTable currentHashTable;
     
     private class WikiItem {
@@ -107,7 +106,7 @@ class Index1 {
             word = word.replaceAll("[^A-Za-z0-9]", "");
             document = word;
             
-            currentHashTable = new HashTable(HashTableSize);
+            currentHashTable = new HashTable(100);
             currentHashTable.insert(word);
             
             while (input.hasNext()) {  
@@ -119,6 +118,22 @@ class Index1 {
                 	word = word.replaceAll("[^A-Za-z0-9]", "");
                 	document = word;
                 }
+                
+                if((double) currentHashTable.n / currentHashTable.size > 1.0){
+                	System.out.println("Making new Hash Table, size = " + currentHashTable.size * 2);
+                	HashTable tmpHashTable = new HashTable(currentHashTable.size * 2);
+                	WikiItem currentWikiItem;
+                	for(int i = 0; i < currentHashTable.size; i++){
+                		 currentWikiItem = currentHashTable.getIndex(i);
+                		 while(currentWikiItem != null){
+                			 tmpHashTable.insert(currentWikiItem.str);
+                			 currentWikiItem = currentWikiItem.next;
+                		 }
+                	}
+                	currentHashTable = tmpHashTable;
+                	
+                }
+                
             	currentHashTable.insert(word);
             }
             /*
@@ -132,7 +147,8 @@ class Index1 {
             	current=current.next;
             }*/
             
-            System.out.println(currentHashTable.n);
+            System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
+            System.out.println((double)currentHashTable.n / currentHashTable.size);
             
             input.close();
             
