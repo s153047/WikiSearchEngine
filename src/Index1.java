@@ -38,6 +38,7 @@ class Index1 {
         String word,document;
         WikiItem current,current2, tmp;
         DocItem currentD;
+        int n = 0;
         
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
@@ -84,6 +85,7 @@ class Index1 {
                 	
                 	// 2: Hvis ordet ikke er i den første liste endnu
                 	if(current2.next ==null){
+                		n++;
                 		current.next = new WikiItem(word,new DocItem(document,null),null);
                 		current = current.next;
                 		break;
@@ -91,6 +93,7 @@ class Index1 {
                 	current2 = current2.next;
                 }
             }
+            System.out.println(n);
             input.close();
             
         } catch (FileNotFoundException e) {
