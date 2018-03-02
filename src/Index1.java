@@ -7,8 +7,8 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.search;
-	static int numRuns = 100;
-	static int numFiles = 7;
+	static int numRuns = 15;
+	static int numFiles = 10;
     WikiItem start;
     
     private class WikiItem {
@@ -105,7 +105,7 @@ class Index1 {
     	long[] runTime = new long[numFiles];
         
         
-        for(int h = 0; h < numFiles; h++){
+        for(int h = 9; h < numFiles; h++){
         	Index1 i = new Index1(args[h]);
         	System.out.println("Searching: " + args[h]);
     		totalTime = 0;
