@@ -8,8 +8,9 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.normal;
-	static int numRuns = 100;
-	static int numFiles = 7;
+	static int numRuns = 100000;
+	static int numFiles = 5;
+	static int startFile = 0;
     String document;
     HashTable currentHashTable;
     
@@ -106,7 +107,7 @@ class Index1 {
             word = word.replaceAll("[^A-Za-z0-9]", "");
             document = word;
             
-            currentHashTable = new HashTable(100);
+            currentHashTable = new HashTable(128);
             currentHashTable.insert(word);
             
             while (input.hasNext()) {  
@@ -173,8 +174,8 @@ class Index1 {
     }
  
     public static void normal(String[] args) {
-        System.out.println("Preprocessing " + args[0]);
-        Index1 i = new Index1(args[0]);
+        System.out.println("Preprocessing " + args[2]);
+        Index1 i = new Index1(args[2]);
         Scanner console = new Scanner(System.in);
         for (;;) {
             System.out.println("Input search string or type exit to stop");
@@ -192,7 +193,7 @@ class Index1 {
     	long time, totalTime = 0;
     	int[] runTime = new int[numFiles];
     	
-    	for(int h = 0; h < numFiles; h++){
+    	for(int h = startFile; h < numFiles; h++){
     		System.out.println("Preprocessing " + args[h]);
     		totalTime = 0;
     		
@@ -216,7 +217,7 @@ class Index1 {
     	long[] runTime = new long[numFiles];
         
         
-        for(int h = 0; h < numFiles; h++){
+        for(int h = startFile; h < numFiles; h++){
         	Index1 i = new Index1(args[h]);
         	System.out.println("Searching: " + args[h]);
     		totalTime = 0;
@@ -225,7 +226,7 @@ class Index1 {
         		i.search("%&/¤#%&¤/(%");
                 totalTime+= System.currentTimeMillis() - time;
         	}
-    		runTime[h] = ( totalTime) / (long) numRuns; 
+    		runTime[h] = ( totalTime); 
         }
         for(int j = 0; j < numFiles; j++){
         	//System.out.println(j*j + " : " + runTime[j]);
