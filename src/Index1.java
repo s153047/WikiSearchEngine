@@ -7,7 +7,7 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.pre;
+	static Setting setting = Setting.search;
 	static int numRuns = 1;
 	static int numFiles = 8;
 	static int start = 0;
@@ -118,8 +118,8 @@ class Index1 {
     }
  
     public static void normal(String[] args) {
-        System.out.println("Preprocessing " + args[0]);
-        Index1 i = new Index1(args[0]);
+        System.out.println("Preprocessing " + args[2]);
+        Index1 i = new Index1(args[2]);
         Scanner console = new Scanner(System.in);
         for (;;) {
             System.out.println("Input search string or type exit to stop");
