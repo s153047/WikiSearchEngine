@@ -7,10 +7,10 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.search;
+	static Setting setting = Setting.pre;
 	static int numRuns = 1;
-	static int numFiles = 8;
-	static int start = 0;
+	static int numFiles = 7;
+	static int start = 6;
     WikiItem startW;
     
     private class WikiItem {
@@ -74,6 +74,7 @@ class Index1 {
                 				break;
                 			
                 			if(currentD.next == null){
+                				n++;
                 				currentD.next = new DocItem(document, null);
                 			}
                 			
@@ -86,7 +87,7 @@ class Index1 {
                 	
                 	// 2: Hvis ordet ikke er i den første liste endnu
                 	if(current2.next ==null){
-                		n++;
+                		n+=2;
                 		current.next = new WikiItem(word,new DocItem(document,null),null);
                 		current = current.next;
                 		break;
@@ -181,6 +182,7 @@ class Index1 {
     
     public static void main(String[] args) {
 
+    	
     	switch(setting) {
     		case normal : 
     			normal(args);
