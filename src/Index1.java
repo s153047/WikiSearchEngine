@@ -8,9 +8,10 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.pre;
-	static int numFiles = 3;
-	static int numRuns = 10;
+	static Setting setting = Setting.search;
+	static int numRuns = 1000;
+	static int numFiles = 7;
+	static int startFile = 0;
     WikiItem start;
  
     private class WikiItem {
@@ -98,7 +99,7 @@ class Index1 {
     	
     	
     	
-    	for(int h = 0; h < numFiles; h++){
+    	for(int h = startFile; h < numFiles; h++){
     		System.out.println("Preprocessing " + args[h]);
     		totalTime = 0;
     		
@@ -122,7 +123,7 @@ class Index1 {
     	long[] runTime = new long[numFiles];
         
         
-        for(int h = 0; h < numFiles; h++){
+        for(int h = startFile; h < numFiles; h++){
         	Index1 i = new Index1(args[h]);
         	System.out.println("Searching: " + args[h]);
     		totalTime = 0;
@@ -131,7 +132,7 @@ class Index1 {
         		i.search("%&/¤#%&¤/(%");
                 totalTime+= System.currentTimeMillis() - time;
         	}
-    		runTime[h] = ( totalTime) / (long) numRuns; 
+    		runTime[h] = ( totalTime); 
         }
         for(int j = 0; j < numFiles; j++){
         	//System.out.println(j*j + " : " + runTime[j]);
