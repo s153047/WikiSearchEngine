@@ -48,6 +48,7 @@ class Index1 {
     private class HashTable{
     	private final int size;
     	private int n = 0;
+    	private int c = 0;
     	WikiItem[] table; 
     	HashTable(int s){
     		size = s;
@@ -62,10 +63,10 @@ class Index1 {
     		WikiItem currentWikiItem = getBucket(word); 
     		
     		
-    		if(currentWikiItem == null){ 								// den's key er ikke i hashTable
+    		if(currentWikiItem == null){ 								// no collision
     			n++;
     			table[(word.hashCode() & 0x7fffffff) % size] = new WikiItem(word,new DocItem(document,null), null);			
-    		} else {
+    		} else {																// collision
     			while(true){
     				if(currentWikiItem.str.equals(word)){					// den er i hashTable
     					DocItem currentDocItem = currentWikiItem.docs; 
@@ -81,6 +82,7 @@ class Index1 {
     				}
     				if(currentWikiItem.next == null) {				// den er ikke i hashTable
     					n++;
+    					c++;
     					currentWikiItem.next = new WikiItem(word,new DocItem(document,null), null);
     					return;
     				}
@@ -130,6 +132,7 @@ class Index1 {
                  	
                  	HashTable tmpHashTable = new HashTable(currentHashTable.size * 2);
                  	tmpHashTable.n = currentHashTable.n;
+                 	tmpHashTable.c = currentHashTable.c;
                  	
                  	for(int i = 0; i < currentHashTable.size; i++){									// loop igennem hashTable 
                  		currentWikiItem = currentHashTable.getIndex(i);
@@ -261,6 +264,32 @@ class Index1 {
     
     public static void main(String[] args) {
 
+    	try {
+        	Scanner input = new Scanner(new File(args[9]), "UTF-8");    
+            int[] table = new int[13880];
+        	while(input.hasNext()){
+        		table[(input.next().hashCode()& 0x7fffffff) % 13880]+=1;
+        		
+        		
+        	}
+        	int c = 0;
+        	int y = 0;
+        	for(int i = 0;i < 13880; i++ ){
+        		if(table[i] > 1){
+        			c++;
+        		}
+        		if(table[i] > y){
+        			y=table[i];
+        		}
+        	}
+        	System.out.println("c: "+c);
+        	System.out.println("y: "+y);
+           
+        } catch (FileNotFoundException e) {
+            System.out.println("Error reading file " + args[0]);
+        }
+    	
+    	/*
     	switch(setting) {
     		case normal : 
     			normal(args);
@@ -271,6 +300,6 @@ class Index1 {
     		case search :
     			searchTest(args);
     			break;
-    	}
+    	}*/
     }
 }
