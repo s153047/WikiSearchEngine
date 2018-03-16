@@ -9,8 +9,8 @@ class Index1 {
 	
 	static Setting setting = Setting.pre;
 	static int numRuns = 1;
-	static int numFiles = 6;
-	static int startFile = 5;
+	static int numFiles =10;
+	static int startFile = 9;
 	
     String document;
     HashTable currentHashTable;
@@ -62,12 +62,12 @@ class Index1 {
     		WikiItem currentWikiItem = getBucket(word); 
     		
     		
-    		if(currentWikiItem == null){ 								// den's key er ikke i hashTable
+    		if(currentWikiItem == null){ 								// no collision
     			n++;
     			table[(word.hashCode() & 0x7fffffff) % size] = new WikiItem(word,new DocItem(document,null), null);			
-    		} else {
+    		} else {																// collision
     			while(true){
-    				if(currentWikiItem.str.equals(word)){					// den er i hashTable
+    				if(currentWikiItem.str.equals(word)){					// den er i linked list
     					DocItem currentDocItem = currentWikiItem.docs; 
     					while(currentDocItem != null){
     						if(currentDocItem.str.equals(document)){
@@ -79,7 +79,7 @@ class Index1 {
     						currentDocItem = currentDocItem.next;
     					}
     				}
-    				if(currentWikiItem.next == null) {				// den er ikke i hashTable
+    				if(currentWikiItem.next == null) {				// den er ikke i linked list
     					n++;
     					currentWikiItem.next = new WikiItem(word,new DocItem(document,null), null);
     					return;
@@ -124,7 +124,7 @@ class Index1 {
                 }
                 
                 if((double) currentHashTable.n / currentHashTable.size > 1.0){
-                 	System.out.println("Making new Hash Table, size = " + currentHashTable.size * 2 );
+                 	//System.out.println("Making new Hash Table, size = " + currentHashTable.size * 2 );
                  	int currentHashCode;
                  	WikiItem currentWikiItem, nextWikiItem, currentWikiItem2;
                  	
@@ -141,6 +141,7 @@ class Index1 {
                  				tmpHashTable.table[currentHashCode % tmpHashTable.size] = currentWikiItem;
                  				currentWikiItem.next = null;
                  			} else {																											// collision
+
                  				currentWikiItem2 = tmpHashTable.table[currentHashCode % tmpHashTable.size];
                  				while(currentWikiItem2.next != null){
                  					currentWikiItem2 = currentWikiItem2.next;
@@ -154,25 +155,13 @@ class Index1 {
                  	}
                  	
                  	currentHashTable = tmpHashTable;
-                 	 System.out.println("Done doubling");
+                 	//System.out.println("Done doubling");
                  }
             	currentHashTable.insert(word);
             }
 
             System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
             System.out.println((double)currentHashTable.n / currentHashTable.size);
-            
-            WikiItem currentWikiItem;
-            
-            for(int i = 0; i < 100; i++){
-            	currentWikiItem = currentHashTable.getIndex(i+1000);
-            	System.out.println();
-            	System.out.println("i: ");
-            	while(currentWikiItem != null){
-            		System.out.print(currentWikiItem.str + ", ");
-            		currentWikiItem = currentWikiItem.next;
-            	}
-            }
             
             input.close();
             
@@ -190,7 +179,6 @@ class Index1 {
 				for(DocItem doc = currentWikiItem.docs ; doc != null; doc = doc.next){
                 	list.add(doc.str);
                 }
-				System.out.println(currentWikiItem.str);
 				break;
 			}
 			currentWikiItem = currentWikiItem.next;
@@ -248,7 +236,8 @@ class Index1 {
     		totalTime = 0;
     		for(int j = 0; j< numRuns; j++){
     			time = System.currentTimeMillis();
-        		i.search("%&/¤#%&¤/(%");
+        		//i.search("%&/¤#%&¤/(%");
+    			i.search("the");
                 totalTime+= System.currentTimeMillis() - time;
         	}
     		runTime[h] = ( totalTime); 
