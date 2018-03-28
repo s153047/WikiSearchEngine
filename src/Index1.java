@@ -7,10 +7,10 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.pre;
-	static int numRuns = 1;
-	static int numFiles =10;
-	static int startFile = 9;
+	static Setting setting = Setting.normal;
+	static int numRuns = 15;
+	static int numFiles =4;
+	static int startFile = 0;
 	
     String document;
     HashTable currentHashTable;
@@ -60,7 +60,7 @@ class Index1 {
     	public void insert(String word){								// 3 situationer:
     		
     		WikiItem currentWikiItem = getBucket(word); 
-    		
+    		DocItem tmpDocItem; 
     		
     		if(currentWikiItem == null){ 								// no collision
     			n++;
@@ -68,6 +68,14 @@ class Index1 {
     		} else {																// collision
     			while(true){
     				if(currentWikiItem.str.equals(word)){					// den er i linked list
+    					/*
+    					if(currentWikiItem.docs.str.equals(document)){
+    						return;
+    					}
+    					tmpDocItem = new DocItem(document,currentWikiItem.docs);
+    					currentWikiItem.docs = tmpDocItem;
+    					*/
+    					
     					DocItem currentDocItem = currentWikiItem.docs; 
     					while(currentDocItem != null){
     						if(currentDocItem.str.equals(document)){
@@ -77,6 +85,7 @@ class Index1 {
     							currentDocItem.next = new DocItem(document,null);
     						}
     						currentDocItem = currentDocItem.next;
+    						
     					}
     				}
     				if(currentWikiItem.next == null) {				// den er ikke i linked list
