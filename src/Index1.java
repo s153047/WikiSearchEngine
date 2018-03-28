@@ -7,10 +7,10 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.normal;
+	static Setting setting = Setting.pre;
 	static int numRuns = 15;
-	static int numFiles =4;
-	static int startFile = 0;
+	static int numFiles =9;
+	static int startFile = 8;
 	
     String document;
     HashTable currentHashTable;
@@ -68,27 +68,15 @@ class Index1 {
     		} else {																// collision
     			while(true){
     				if(currentWikiItem.str.equals(word)){					// den er i linked list
-    					/*
+    					
     					if(currentWikiItem.docs.str.equals(document)){
     						return;
     					}
     					tmpDocItem = new DocItem(document,currentWikiItem.docs);
     					currentWikiItem.docs = tmpDocItem;
-    					*/
+    					return;
     					
-    					DocItem currentDocItem = currentWikiItem.docs; 
-    					while(currentDocItem != null){
-    						if(currentDocItem.str.equals(document)){
-    							return;
-    						}
-    						if(currentDocItem.next == null){
-    							currentDocItem.next = new DocItem(document,null);
-    						}
-    						currentDocItem = currentDocItem.next;
-    						
-    					}
-    				}
-    				if(currentWikiItem.next == null) {				// den er ikke i linked list
+    				} else if(currentWikiItem.next == null) {				// den er ikke i linked list
     					n++;
     					currentWikiItem.next = new WikiItem(word,new DocItem(document,null), null);
     					return;
@@ -133,7 +121,7 @@ class Index1 {
                 }
                 
                 if((double) currentHashTable.n / currentHashTable.size > 1.0){
-                 	//System.out.println("Making new Hash Table, size = " + currentHashTable.size * 2 );
+                	//System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 );
                  	int currentHashCode;
                  	WikiItem currentWikiItem, nextWikiItem, currentWikiItem2;
                  	
@@ -165,15 +153,19 @@ class Index1 {
                  	
                  	currentHashTable = tmpHashTable;
                  	//System.out.println("Done doubling");
+                 	
+                 	
+                      
+                    
                  }
             	currentHashTable.insert(word);
             }
 
             System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
             System.out.println((double)currentHashTable.n / currentHashTable.size);
-            
             input.close();
             
+          
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
