@@ -7,10 +7,10 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.pre;
+	static Setting setting = Setting.normal;
 	static int numRuns = 15;
 	static int numFiles =9;
-	static int startFile = 8;
+	static int startFile = 0;
 	
     String document;
     HashTable currentHashTable;
