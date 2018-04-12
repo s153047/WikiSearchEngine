@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
  
 class Index1 {
 	public enum Setting{
@@ -207,29 +208,21 @@ class Index1 {
     }
     
 
-    public static int hashCode(String word,int a, int b, int c){
+    public static int hashCode(String word,long[] a, int l){
     	// b,c er random seeds fra [0,...,p-1], hvor p = 2^31-1
     	// a fra [1,...,p-1]
     	long h = 0;
 		long x;
-		
-    	for(int i = 0; i<word.length(); i++ ){
-    		x = word.charAt(word.length()-1-i);
-    		//System.out.println("x :" + x);
-			//h += x* (long)(Math.pow(c, i));
-    		h = h * c + x;
-    		//System.out.println("h :" +h);
-			h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
-			h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
-			h = (h == (long)(Math.pow(2, 31)-1)) ? 0 : h;
-			//System.out.println("hmod :" +h);
+		long y;
+		for(int i = 0; i < word.length() / 2; i++){
+			x = word.charAt((i*2)+1);
+			y = word.charAt(i*2);
+			h = (a[i*2] + x) * (a[(i*2)+1] + y);
 		}
-    	
-    	h = a*h+b;
-    	//System.out.println("h efter: "+h);
-    	h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
-    	h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
-		h = (h == (long)(Math.pow(2, 31)-1)) ? 0 : h;
+		
+		h += a[word.length()];
+		
+		h = h >> (63 - l);
     	
     	return (int) h ;
     }
@@ -313,8 +306,18 @@ class Index1 {
     
     public static void main(String[] args) {
     	
+    	 int l = (int) Math.pow(2,5);
+    	 long[] a = new long[256];
+    	 for(long b : a){
+    		 b = ThreadLocalRandom.current().nextLong((int) Math.pow(2, 63));
+    		 System.out.println(b);
+    	 }
+    	 String s = "heja";
     	
-    	
+    	 System.out.println(hashCode(s,a,l));
+    			 
+    			 
+    	/*
     	switch(setting) {
     		case normal : 
     			normal(args);
@@ -325,6 +328,6 @@ class Index1 {
     		case search :
     			searchTest(args);
     			break;
-    	}
+    	}*/
     }
 }
