@@ -9,8 +9,8 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.normal;
-	static int numRuns = 15;
-	static int numFiles =9;
+	static int numRuns = 1;
+	static int numFiles =12;
 	static int startFile = 0;
 	
     String document;
@@ -41,16 +41,21 @@ class Index1 {
     
     
     private class HashTable{
+    	Random r = new Random();
+    	
     	private final int size;
     	private int n = 0;
-    	int a,b,c;
+    	int a,b,c,d;
     	WikiItem[] table; 
     	HashTable(int s){
-        	Random r = new Random();
-        	a = r.nextInt(2147483647 - 1) + 1;
+        	
+
+        	a = r.nextInt(2147483647-1)+1;
         	b = r.nextInt(2147483647);
         	c = r.nextInt(2147483647);
+        	d=0;
         	
+
     		size = s;
     		table = new WikiItem[size];
     		for(int i = 0; i < size; i++){
@@ -67,7 +72,9 @@ class Index1 {
     			n++;
     			table[Index1.hashCode(word,a,b,c) % size] = new WikiItem(word,new DocItem(document,null), null);			
     		} else {																// collision
+    			
     			while(true){
+    				d++;
     				if(currentWikiItem.str.equals(word)){					// den er i linked list
     					
     					if(currentWikiItem.docs.str.equals(document)){
@@ -122,7 +129,7 @@ class Index1 {
                 }
                 
                 if((double) currentHashTable.n / currentHashTable.size > 1.0){
-                	//System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 );
+                	System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 );
                  	int currentHashCode;
                  	WikiItem currentWikiItem, nextWikiItem, currentWikiItem2;
                  	
@@ -134,7 +141,7 @@ class Index1 {
 
                  		while(currentWikiItem != null){													// loop igennem wikiItem Linked List
                  			nextWikiItem = currentWikiItem.next;
-                 			currentHashCode = Index1.hashCode(currentWikiItem.str,currentHashTable.a,currentHashTable.b,currentHashTable.c) & 0x7fffffff;
+                 			currentHashCode = Index1.hashCode(currentWikiItem.str,tmpHashTable.a,tmpHashTable.b,tmpHashTable.c);
                  			if(tmpHashTable.table[currentHashCode % tmpHashTable.size] == null){			// no collision
                  				tmpHashTable.table[currentHashCode % tmpHashTable.size] = currentWikiItem;
                  				currentWikiItem.next = null;
@@ -142,6 +149,7 @@ class Index1 {
 
                  				currentWikiItem2 = tmpHashTable.table[currentHashCode % tmpHashTable.size];
                  				while(currentWikiItem2.next != null){
+                 					tmpHashTable.d++;
                  					currentWikiItem2 = currentWikiItem2.next;
                  				}
                  				currentWikiItem2.next = currentWikiItem;
@@ -166,7 +174,32 @@ class Index1 {
             System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
             
-          
+            WikiItem currentWikiItem;
+            int c,cmax,ci;
+            cmax = 0;
+            ci = 0;
+            for(int i = 0; i < currentHashTable.size; i++){
+            	currentWikiItem = currentHashTable.table[i];
+            	c = 0;
+            	
+            	while(currentWikiItem != null){
+            		c++;
+            		currentWikiItem = currentWikiItem.next;
+            	}
+            	if(c > cmax){
+            		cmax = c;
+            		ci = i;
+            	}
+            }
+            System.out.println("d: "+currentHashTable.d);
+            System.out.println("cmax: "+cmax);
+            System.out.println("ci: "+ci);
+            currentWikiItem = currentHashTable.getIndex(ci);
+            while(currentWikiItem.next != null){
+            	System.out.print(currentWikiItem.str + " , ");
+            	currentWikiItem = currentWikiItem.next; 
+            }
+          System.out.println();
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
@@ -177,20 +210,27 @@ class Index1 {
     public static int hashCode(String word,int a, int b, int c){
     	// b,c er random seeds fra [0,...,p-1], hvor p = 2^31-1
     	// a fra [1,...,p-1]
-    	int h = 0;
-		int x;
+    	long h = 0;
+		long x;
 		
-		// Sum( ASCII kode * c^i) 					, hvor i = 0 -> word.length
     	for(int i = 0; i<word.length(); i++ ){
-    		x = (int)word.charAt(word.length()-1-i);
-			h += (int)(x*Math.pow(c, i)) ;
-			h = h & 0x7fffffff;
+    		x = word.charAt(word.length()-1-i);
+    		//System.out.println("x :" + x);
+			//h += x* (long)(Math.pow(c, i));
+    		h = h * c + x;
+    		//System.out.println("h :" +h);
+			h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
+			h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
+			h = (h == (long)(Math.pow(2, 31)-1)) ? 0 : h;
+			//System.out.println("hmod :" +h);
 		}
     	
-    	// Multiply mod 
     	h = a*h+b;
-    	h = h & 0x7fffffff;
-    	System.out.println(h);
+    	//System.out.println("h efter: "+h);
+    	h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
+    	h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
+		h = (h == (long)(Math.pow(2, 31)-1)) ? 0 : h;
+    	
     	return (int) h ;
     }
  
@@ -272,9 +312,7 @@ class Index1 {
     }
     
     public static void main(String[] args) {
-
-    	//hashCode("yes", 57843,854328,44445353);
-
+    	
     	
     	
     	switch(setting) {
