@@ -11,7 +11,7 @@ class Index1 {
 	static Setting setting = Setting.col;
 	static int numRuns = 5;
 	static int numFiles =9;
-	static int startFile = 4;
+	static int startFile = 0;
 	
     String document;
     HashTable currentHashTable;
@@ -175,33 +175,6 @@ class Index1 {
             System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
             
-            WikiItem currentWikiItem;
-            int c,ci;
-            cmax = 0;
-            ci = 0;
-            for(int i = 0; i < currentHashTable.size; i++){
-            	currentWikiItem = currentHashTable.table[i];
-            	c = 0;
-            	
-            	while(currentWikiItem != null){
-            		c++;
-            		currentWikiItem = currentWikiItem.next;
-            	}
-            	if(c > cmax){
-            		cmax = c;
-            		ci = i;
-            	}
-            }
-            //System.out.println("d: "+currentHashTable.d);
-            //System.out.println("cmax: "+cmax);
-            //System.out.println("ci: "+ci);
-            currentWikiItem = currentHashTable.getIndex(ci);
-            while(currentWikiItem.next != null){
-            	//System.out.print(currentWikiItem.str + " , ");
-            	currentWikiItem = currentWikiItem.next; 
-            }
-          //System.out.println();
-            
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
         }
@@ -307,6 +280,25 @@ class Index1 {
         }
     }
     
+    public static void collisionTest(String[] args){
+    	int[] collisions = new int[numFiles];
+    	int d;
+    	for(int h = startFile; h < numFiles; h++){
+    		System.out.println("Preprocessing " + args[h]);
+    		d = 0;
+    		for(int j = 0; j<numRuns; j++){
+                Index1 i = new Index1(args[h]);
+                d += i.currentHashTable.d;
+        	}
+    		collisions[h] = d / numRuns;
+    	}
+    	
+        System.out.println("Collisions: " );
+        for(int j = 0; j < numFiles; j++){
+        	//System.out.println(j*j + " : " + runTime[j]);
+        	System.out.println(collisions[j]);
+        }
+    }
     public static void main(String[] args) {
     	
     	
@@ -322,18 +314,7 @@ class Index1 {
     			searchTest(args);
     			break;
     		case col :
-    			
-    			int d =0;
-    			int cmax = 0;
-    			for(int h = 0; h < 5; h++){
-    		        System.out.println("Preprocessing " + args[startFile]);
-    		        Index1 i = new Index1(args[startFile]);
-    		        d += i.currentHashTable.d;
-    		        cmax += i.cmax;
-    			}
-    			System.out.println("d: " + d/5);
-    			System.out.println("cmax: " +cmax/5);
-    			
+    			collisionTest(args);
     			break;
     	}
     }
