@@ -200,6 +200,10 @@ class Index1 {
     	h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
 		h = (h == (long)(Math.pow(2, 31)-1)) ? 0 : h;
     	
+		if(0 > h || h >(long) (Math.pow(2, 31))-1){
+			System.out.println(h);
+		}
+		
     	return (int) h ;
     }
  
@@ -301,8 +305,22 @@ class Index1 {
     }
     public static void main(String[] args) {
     	
+    	Random r = new Random();
+    	
+    	int a,b,c;
     	
     	
+    	for(int i = 0; i < 1087680; i++){
+    		a = r.nextInt(2147483647-1)+1;
+    		b = r.nextInt(2147483647);
+        	c = r.nextInt(2147483647);
+
+        	hashCode("ggfdagfslkjghfskdjghsghfsdjjks",a,b,c);
+    	}
+    		
+    	
+    	
+    	/*
     	switch(setting) {
     		case normal : 
     			normal(args);
@@ -316,6 +334,6 @@ class Index1 {
     		case col :
     			collisionTest(args);
     			break;
-    	}
+    	}*/
     }
 }
