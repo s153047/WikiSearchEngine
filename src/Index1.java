@@ -5,16 +5,17 @@ import java.util.Scanner;
  
 class Index1 {
 	public enum Setting{
-		normal, pre, search 
+		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.normal;
-	static int numRuns = 1;
-	static int numFiles =12;
-	static int startFile = 0;
+	static Setting setting = Setting.col;
+	static int numRuns = 5;
+	static int numFiles =9;
+	static int startFile = 4;
 	
     String document;
     HashTable currentHashTable;
+    int cmax;
     
     private class WikiItem {
         String str;
@@ -129,7 +130,7 @@ class Index1 {
                 }
                 
                 if((double) currentHashTable.n / currentHashTable.size > 1.0){
-                	System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 );
+                	//System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 );
                  	int currentHashCode;
                  	WikiItem currentWikiItem, nextWikiItem, currentWikiItem2;
                  	
@@ -175,7 +176,7 @@ class Index1 {
             input.close();
             
             WikiItem currentWikiItem;
-            int c,cmax,ci;
+            int c,ci;
             cmax = 0;
             ci = 0;
             for(int i = 0; i < currentHashTable.size; i++){
@@ -191,15 +192,15 @@ class Index1 {
             		ci = i;
             	}
             }
-            System.out.println("d: "+currentHashTable.d);
-            System.out.println("cmax: "+cmax);
-            System.out.println("ci: "+ci);
+            //System.out.println("d: "+currentHashTable.d);
+            //System.out.println("cmax: "+cmax);
+            //System.out.println("ci: "+ci);
             currentWikiItem = currentHashTable.getIndex(ci);
             while(currentWikiItem.next != null){
-            	System.out.print(currentWikiItem.str + " , ");
+            	//System.out.print(currentWikiItem.str + " , ");
             	currentWikiItem = currentWikiItem.next; 
             }
-          System.out.println();
+          //System.out.println();
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
@@ -215,18 +216,13 @@ class Index1 {
 		
     	for(int i = 0; i<word.length(); i++ ){
     		x = word.charAt(word.length()-1-i);
-    		//System.out.println("x :" + x);
-			//h += x* (long)(Math.pow(c, i));
     		h = h * c + x;
-    		//System.out.println("h :" +h);
 			h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
 			h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
 			h = (h == (long)(Math.pow(2, 31)-1)) ? 0 : h;
-			//System.out.println("hmod :" +h);
 		}
     	
     	h = a*h+b;
-    	//System.out.println("h efter: "+h);
     	h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
     	h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
 		h = (h == (long)(Math.pow(2, 31)-1)) ? 0 : h;
@@ -324,6 +320,20 @@ class Index1 {
     			break;
     		case search :
     			searchTest(args);
+    			break;
+    		case col :
+    			
+    			int d =0;
+    			int cmax = 0;
+    			for(int h = 0; h < 5; h++){
+    		        System.out.println("Preprocessing " + args[startFile]);
+    		        Index1 i = new Index1(args[startFile]);
+    		        d += i.currentHashTable.d;
+    		        cmax += i.cmax;
+    			}
+    			System.out.println("d: " + d/5);
+    			System.out.println("cmax: " +cmax/5);
+    			
     			break;
     	}
     }
