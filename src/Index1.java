@@ -4,11 +4,11 @@ import java.util.Scanner;
  
 class Index1 {
 	public enum Setting{
-		normal, pre, search 
+		normal, pre, search,col 
 	}
 	
-	static Setting setting = Setting.normal;
-	static int numRuns = 15;
+	static Setting setting = Setting.col;
+	static int numRuns = 1;
 	static int numFiles =9;
 	static int startFile = 0;
 	
@@ -48,8 +48,10 @@ class Index1 {
     private class HashTable{
     	private final int size;
     	private int n = 0;
+    	int d;
     	WikiItem[] table; 
     	HashTable(int s){
+    		d = 0;
     		size = s;
     		table = new WikiItem[size];
     		for(int i = 0; i < size; i++){
@@ -67,6 +69,7 @@ class Index1 {
     			table[(word.hashCode() & 0x7fffffff) % size] = new WikiItem(word,new DocItem(document,null), null);			
     		} else {																// collision
     			while(true){
+    				d++;
     				if(currentWikiItem.str.equals(word)){					// den er i linked list
     					
     					if(currentWikiItem.docs.str.equals(document)){
@@ -141,6 +144,7 @@ class Index1 {
 
                  				currentWikiItem2 = tmpHashTable.table[currentHashCode % tmpHashTable.size];
                  				while(currentWikiItem2.next != null){
+                 					tmpHashTable.d ++;
                  					currentWikiItem2 = currentWikiItem2.next;
                  				}
                  				currentWikiItem2.next = currentWikiItem;
@@ -165,7 +169,7 @@ class Index1 {
             System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
             
-          
+            
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
@@ -185,6 +189,35 @@ class Index1 {
 			currentWikiItem = currentWikiItem.next;
 		}
         return list;
+    }
+    
+    public int maxCollisions(){
+    	WikiItem currentWikiItem;
+        int c,cmax,ci;
+        cmax = 0;
+        ci = 0;
+        for(int i = 0; i < currentHashTable.size; i++){
+        	currentWikiItem = currentHashTable.table[i];
+        	c = 0;
+        	
+        	while(currentWikiItem != null){
+        		c++;
+        		currentWikiItem = currentWikiItem.next;
+        	}
+        	if(c > cmax){
+        		cmax = c;
+        		ci = i;
+        	}
+        }
+        System.out.println("d: "+currentHashTable.d);
+        System.out.println("cmax: "+cmax);
+        System.out.println("ci: "+ci);
+        currentWikiItem = currentHashTable.getIndex(ci);
+        while(currentWikiItem.next != null){
+        	System.out.print(currentWikiItem.str + " , ");
+        	currentWikiItem = currentWikiItem.next;
+        }
+        return cmax;
     }
  
     public static void normal(String[] args) {
@@ -249,6 +282,28 @@ class Index1 {
         }
     }
     
+    public static void collisionTest(String[] args){
+    	
+    	int[] collisions = new int[numFiles];
+    	int d;
+    	for(int h = startFile; h < numFiles; h++){
+    		System.out.println("Preprocessing " + args[h]);
+    		d = 0;
+    		for(int j = 0; j<numRuns; j++){
+                Index1 i = new Index1(args[h]);
+                d += i.currentHashTable.d;
+        	}
+    		collisions[h] = d / numRuns;
+    	}
+    	
+        System.out.println("Collisions: " );
+        for(int j = 0; j < numFiles; j++){
+        	//System.out.println(j*j + " : " + runTime[j]);
+        	System.out.println(collisions[j]);
+        }
+    	
+    }
+    
     public static void main(String[] args) {
 
     	switch(setting) {
@@ -260,6 +315,9 @@ class Index1 {
     			break;
     		case search :
     			searchTest(args);
+    			break;
+    		case col :
+    			collisionTest(args);
     			break;
     	}
     }
