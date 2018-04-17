@@ -10,7 +10,7 @@ class Index1 {
 	
 	static Setting setting = Setting.col;
 	static int numRuns = 5;
-	static int numFiles =9;
+	static int numFiles =1;
 	static int startFile = 0;
 	
     String document;
@@ -314,13 +314,14 @@ class Index1 {
     		a = r.nextInt(2147483647-1)+1;
     		b = r.nextInt(2147483647);
         	c = r.nextInt(2147483647);
+        	
 
         	hashCode("ggfdagfslkjghfskdjghsghfsdjjks",a,b,c);
     	}
     		
     	
     	
-    	/*
+    	
     	switch(setting) {
     		case normal : 
     			normal(args);
@@ -334,6 +335,6 @@ class Index1 {
     		case col :
     			collisionTest(args);
     			break;
-    	}*/
+    	}
     }
 }
