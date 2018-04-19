@@ -8,7 +8,7 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.col;
+	static Setting setting = Setting.normal;
 	static int numRuns = 5;
 	static int numFiles =1;
 	static int startFile = 0;
@@ -174,6 +174,20 @@ class Index1 {
             System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
             System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
+            
+            WikiItem currentWikiItem;
+            int c;
+            int cmax = 0;
+            for(int i = 0; i < currentHashTable.size; i++){
+            	currentWikiItem = currentHashTable.table[i];
+            	c = 0;
+            	while(currentWikiItem != null){
+            		c++;
+            		currentWikiItem = currentWikiItem.next;
+            	}
+            	if(c > cmax) cmax = c;
+            }
+            System.out.println(cmax);
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
