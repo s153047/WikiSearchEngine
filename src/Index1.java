@@ -71,7 +71,7 @@ class Index1 {
     		
     		if(currentWikiItem == null){ 								// no collision
     			n++;
-    			table[Index1.hashCode(word,a,b,c) % size] = new WikiItem(word,new DocItem(document,null), null);			
+    			//table[Index1.hashCode(word,a,b,c) % size] = new WikiItem(word,new DocItem(document,null), null);			
     		} else {																// collision
     			
     			while(true){
@@ -96,7 +96,7 @@ class Index1 {
     	}
     	
     	public WikiItem getBucket(String word){
-    		return table[Index1.hashCode(word,a,b,c) % size];
+    		return table[/*Index1.hashCode(word,a,b,c)*/ 1 % size];
     	}
     	
     	public WikiItem getIndex(int i){
@@ -142,7 +142,7 @@ class Index1 {
 
                  		while(currentWikiItem != null){													// loop igennem wikiItem Linked List
                  			nextWikiItem = currentWikiItem.next;
-                 			currentHashCode = Index1.hashCode(currentWikiItem.str,tmpHashTable.a,tmpHashTable.b,tmpHashTable.c);
+                 			currentHashCode = 1; //Index1.hashCode(currentWikiItem.str,tmpHashTable.a,tmpHashTable.b,tmpHashTable.c);
                  			if(tmpHashTable.table[currentHashCode % tmpHashTable.size] == null){			// no collision
                  				tmpHashTable.table[currentHashCode % tmpHashTable.size] = currentWikiItem;
                  				currentWikiItem.next = null;
@@ -217,11 +217,10 @@ class Index1 {
 		for(int i = 0; i < word.length() / 2; i++){
 			x = word.charAt((i*2)+1);
 			y = word.charAt(i*2);
-			h = (a[i*2] + x) * (a[(i*2)+1] + y);
+			h += (a[i*2] + x) * (a[(i*2)+1] + y);
 		}
 		
 		h += a[word.length()];
-		
 		h = h >> (63 - l);
     	
     	return (int) h ;
@@ -306,16 +305,21 @@ class Index1 {
     
     public static void main(String[] args) {
     	
-    	 int l = (int) Math.pow(2,5);
-    	 long[] a = new long[256];
-    	 for(long b : a){
-    		 b = ThreadLocalRandom.current().nextLong((int) Math.pow(2, 63));
-    		 System.out.println(b);
+
+    	 int l = (int) 20;
+    	 
+    	 for(int k = 0; k < 1000; k++){
+    	   	 long[] a = new long[256];
+        	 
+        	 for(int i = 0 ; i < 256-1;i++ ){
+        		 a[i] = ThreadLocalRandom.current().nextLong((int) Math.pow(2, 63));
+        	 }
+        	 
+        	 String s = "heyaheyaheyaheyaheya";
+        	
+        	 hashCode(s,a,l);
     	 }
-    	 String s = "heja";
-    	
-    	 System.out.println(hashCode(s,a,l));
-    			 
+ 
     			 
     	/*
     	switch(setting) {
