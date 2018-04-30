@@ -9,7 +9,7 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.pre;
+	static Setting setting = Setting.col;
 	static int numRuns = 1;
 	static int numFiles =1;
 	static int startFile = 0;
