@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
  
 class Index1 {
 	public enum Setting{
@@ -46,18 +47,16 @@ class Index1 {
     	
     	private final int size;
     	private int n = 0;
-    	int a,b,c,d;
+    	long a,b,c;
+    	int d;
     	WikiItem[] table; 
     	HashTable(int s){
         	
-
-        	//a = r.nextInt(2147483647-1)+1;
-        	//b = r.nextInt(2147483647);
-        	//c = r.nextInt(2147483647-1)+1;
-    		a = 1489629442;
-        	b = 498031218;
-        	c = 621420319;
+    		a = ThreadLocalRandom.current().nextLong(2305843009213693951L-1)+1;
+    		b = ThreadLocalRandom.current().nextLong(2305843009213693951L);
+    		c = ThreadLocalRandom.current().nextLong(2305843009213693951L-1)+1;
     		
+
         	d=0;
         	
 
@@ -75,7 +74,7 @@ class Index1 {
     		
     		if(currentWikiItem == null){ 								// no collision
     			n++;
-    			table[Index1.hashCode(word,a,b,c) % size] = new WikiItem(word,new DocItem(document,null), null);			
+    			table[(int)(Index1.hashCode(word,a,b,c) % size)] = new WikiItem(word,new DocItem(document,null), null);			
     		} else {																// collision
     			
     			while(true){
@@ -100,7 +99,7 @@ class Index1 {
     	}
     	
     	public WikiItem getBucket(String word){
-    		return table[Index1.hashCode(word,a,b,c) % size];
+    		return table[(int)(Index1.hashCode(word,a,b,c) % size)];
     	}
     	
     	public WikiItem getIndex(int i){
@@ -135,7 +134,7 @@ class Index1 {
                 
                 if((double) currentHashTable.n / currentHashTable.size > 1.0){
                 	//System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 );
-                 	int currentHashCode;
+                 	long currentHashCode;
                  	WikiItem currentWikiItem, nextWikiItem, currentWikiItem2;
                  	
                  	HashTable tmpHashTable = new HashTable(currentHashTable.size * 2);
@@ -147,12 +146,12 @@ class Index1 {
                  		while(currentWikiItem != null){													// loop igennem wikiItem Linked List
                  			nextWikiItem = currentWikiItem.next;
                  			currentHashCode = Index1.hashCode(currentWikiItem.str,tmpHashTable.a,tmpHashTable.b,tmpHashTable.c);
-                 			if(tmpHashTable.table[currentHashCode % tmpHashTable.size] == null){			// no collision
-                 				tmpHashTable.table[currentHashCode % tmpHashTable.size] = currentWikiItem;
+                 			if(tmpHashTable.table[(int)(currentHashCode % tmpHashTable.size)] == null){			// no collision
+                 				tmpHashTable.table[(int)(currentHashCode % tmpHashTable.size)] = currentWikiItem;
                  				currentWikiItem.next = null;
                  			} else {																											// collision
 
-                 				currentWikiItem2 = tmpHashTable.table[currentHashCode % tmpHashTable.size];
+                 				currentWikiItem2 = tmpHashTable.table[(int)(currentHashCode % tmpHashTable.size)];
                  				while(currentWikiItem2.next != null){
                  					tmpHashTable.d++;
                  					currentWikiItem2 = currentWikiItem2.next;
@@ -198,6 +197,11 @@ class Index1 {
             	bucketList[c] ++;
             	
             }
+            System.out.println();
+            System.out.println(currentHashTable.a);
+            System.out.println(currentHashTable.b);
+            System.out.println(currentHashTable.c);
+            
             System.out.println(cmax);
             System.out.println();
             for(int i : bucketList){
@@ -214,34 +218,36 @@ class Index1 {
             }
             System.out.println();
             
+            
+            
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
         }
     }
     
 
-    public static int hashCode(String word,int a, int b, int c){
+    public static long hashCode(String word,long a,long b, long c){
     	// b,c er random seeds fra [0,...,p-1], hvor p = 2^31-1
     	// a fra [1,...,p-1]
-    	long h = 0;
+    	long h = 1;
 		long x;
-		long u = (1<<31)-1;
+		long u = (1<<61)-1;
 		
 		
     	for(int i = 0; i<word.length(); i++ ){
     		x = word.charAt(word.length()-1-i);
     		h = h * c + x;
-			h = (h & u) + (h >> 31);
-			h = (h & u) + (h >> 31);
+			h = (h & u) + (h >> 61);
+			h = (h & u) + (h >> 61);
 			h = (h == u) ? 0 : h;
 		}
     	
     	h = a*h+b;
-		h = (h & u) + (h >> 31);
-		h = (h & u) + (h >> 31);
+		h = (h & u) + (h >> 61);
+		h = (h & u) + (h >> 61);
 		h = (h == u) ? 0 : h;
 		
-    	return (int) h ;
+    	return h ;
     }
  
     public ArrayList search(String searchstr) {
@@ -340,13 +346,9 @@ class Index1 {
         	System.out.println(collisions[j]);
         }
     }
+    
     public static void main(String[] args) {
-    	
-    System.out.println((1<<31)-1);
-    		
-    	
-    	
-    	
+
     	switch(setting) {
     		case normal : 
     			normal(args);
