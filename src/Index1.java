@@ -9,7 +9,7 @@ class Index1 {
 	
 	static Setting setting = Setting.pre;
 	static int numRuns = 1;
-	static int numFiles =9;
+	static int numFiles =1;
 	static int startFile = 0;
 	
     String document;
@@ -170,7 +170,8 @@ class Index1 {
             input.close();
             
             WikiItem currentWikiItem;
-            int c;
+            int[] bucketList = new int[20];
+            int c,cIndex=0;
             int cmax = 0;
             for(int i = 0; i < currentHashTable.size; i++){
             	currentWikiItem = currentHashTable.table[i];
@@ -179,9 +180,32 @@ class Index1 {
             		c++;
             		currentWikiItem = currentWikiItem.next;
             	}
-            	if(c > cmax) cmax = c;
+            	if(c > cmax) {
+            		cmax = c;
+            		cIndex = i;
+            	}
+            	
+            	bucketList[c] ++;
+            	
             }
+            System.out.println();
+
             System.out.println(cmax);
+            System.out.println();
+            for(int i : bucketList){
+            	System.out.println(i);
+            }
+            System.out.println();
+            
+            
+            System.out.println();
+            currentWikiItem = currentHashTable.table[cIndex];
+            while(currentWikiItem != null){
+            	System.out.println(currentWikiItem.str);
+            	currentWikiItem = currentWikiItem.next;
+            }
+            System.out.println();
+            
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
@@ -314,6 +338,7 @@ class Index1 {
         	System.out.println(collisions[j]);
         }
     	
+        
     }
     
     public static void main(String[] args) {
