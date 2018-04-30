@@ -8,8 +8,8 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.normal;
-	static int numRuns = 5;
+	static Setting setting = Setting.pre;
+	static int numRuns = 1;
 	static int numFiles =1;
 	static int startFile = 0;
 	
@@ -51,9 +51,13 @@ class Index1 {
     	HashTable(int s){
         	
 
-        	a = r.nextInt(2147483647-1)+1;
-        	b = r.nextInt(2147483647);
-        	c = r.nextInt(2147483647);
+        	//a = r.nextInt(2147483647-1)+1;
+        	//b = r.nextInt(2147483647);
+        	//c = r.nextInt(2147483647-1)+1;
+    		a = 1489629442;
+        	b = 498031218;
+        	c = 621420319;
+    		
         	d=0;
         	
 
@@ -176,7 +180,8 @@ class Index1 {
             input.close();
             
             WikiItem currentWikiItem;
-            int c;
+            int[] bucketList = new int[20];
+            int c,cIndex=0;
             int cmax = 0;
             for(int i = 0; i < currentHashTable.size; i++){
             	currentWikiItem = currentHashTable.table[i];
@@ -185,9 +190,29 @@ class Index1 {
             		c++;
             		currentWikiItem = currentWikiItem.next;
             	}
-            	if(c > cmax) cmax = c;
+            	if(c > cmax) {
+            		cmax = c;
+            		cIndex = i;
+            	}
+            	
+            	bucketList[c] ++;
+            	
             }
             System.out.println(cmax);
+            System.out.println();
+            for(int i : bucketList){
+            	System.out.println(i);
+            }
+            System.out.println();
+            
+            
+            System.out.println();
+            currentWikiItem = currentHashTable.table[cIndex];
+            while(currentWikiItem != null){
+            	System.out.println(currentWikiItem.str);
+            	currentWikiItem = currentWikiItem.next;
+            }
+            System.out.println();
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
@@ -200,19 +225,21 @@ class Index1 {
     	// a fra [1,...,p-1]
     	long h = 0;
 		long x;
+		long u = (1<<31)-1;
+		
 		
     	for(int i = 0; i<word.length(); i++ ){
     		x = word.charAt(word.length()-1-i);
     		h = h * c + x;
-			h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
-			h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
-			h = (h == (long)(Math.pow(2, 31)-1)) ? 0 : h;
+			h = (h & u) + (h >> 31);
+			h = (h & u) + (h >> 31);
+			h = (h == u) ? 0 : h;
 		}
     	
     	h = a*h+b;
-    	h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
-    	h = (h & ((long)(Math.pow(2, 31)-1))) + (h >> 31);
-		h = (h == (long)(Math.pow(2, 31)-1)) ? 0 : h;
+		h = (h & u) + (h >> 31);
+		h = (h & u) + (h >> 31);
+		h = (h == u) ? 0 : h;
     	
 		if(0 > h || h >(long) (Math.pow(2, 31))-1){
 			System.out.println(h);
@@ -319,19 +346,7 @@ class Index1 {
     }
     public static void main(String[] args) {
     	
-    	Random r = new Random();
-    	
-    	int a,b,c;
-    	
-    	
-    	for(int i = 0; i < 1087680; i++){
-    		a = r.nextInt(2147483647-1)+1;
-    		b = r.nextInt(2147483647);
-        	c = r.nextInt(2147483647);
-        	
-
-        	hashCode("ggfdagfslkjghfskdjghsghfsdjjks",a,b,c);
-    	}
+    System.out.println((1<<31)-1);
     		
     	
     	
