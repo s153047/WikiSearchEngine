@@ -240,10 +240,6 @@ class Index1 {
 		h = (h & u) + (h >> 31);
 		h = (h & u) + (h >> 31);
 		h = (h == u) ? 0 : h;
-    	
-		if(0 > h || h >(long) (Math.pow(2, 31))-1){
-			System.out.println(h);
-		}
 		
     	return (int) h ;
     }
