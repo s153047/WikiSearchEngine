@@ -223,11 +223,13 @@ class Index1 {
     
 
     public static int hashCode(String word,UnsignedLong[] a, int l){
-    	// b,c er random seeds fra [0,...,p-1], hvor p = 2^31-1
-    	// a fra [1,...,p-1]
+    	// UnsignedLong primitiven er fra Guava biblioteket lavet af Google.
+    	// a består af 256 UnsignedLong mellem 0 og 2^64-1.
+    	// 2^l er størrelsen af hash tabellen.
     	UnsignedLong h = UnsignedLong.ZERO;
     	UnsignedLong x;
     	UnsignedLong y;
+    	
 		for(int i = 0; i < word.length() / 2; i++){
 			x = UnsignedLong.valueOf(word.charAt((i*2)+1));
 			y = UnsignedLong.valueOf(word.charAt(i*2));
@@ -238,8 +240,8 @@ class Index1 {
 		}
 
 		h = h.plus(a[word.length()]);
-		long j = h.longValue();
-		j = j >>> (63 - l);
+		long j = h.longValue();						//ingen bitshift for UnsignedLong
+		j = j >>> (64 - l);
     	return (int) j ;
     }
  
