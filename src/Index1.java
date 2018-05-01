@@ -230,7 +230,7 @@ class Index1 {
     
 
     public static long hashCode(String word,long a,long b, long c){
-    	// b,c er random seeds fra [0,...,p-1], hvor p = 2^31-1
+    	// b,c er random seeds fra [0,...,p-1], hvor p = 2^61-1
     	// a fra [1,...,p-1]
     	long h = 1;
 		long x;
