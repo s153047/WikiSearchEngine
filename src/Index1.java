@@ -133,7 +133,7 @@ class Index1 {
                 }
                 
                 if((double) currentHashTable.n / currentHashTable.size > 1.0){
-                	System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 );
+                	//System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 );
                  	int currentHashCode;
                  	WikiItem currentWikiItem, nextWikiItem, currentWikiItem2;
                  	
@@ -180,31 +180,41 @@ class Index1 {
             input.close();
             
             WikiItem currentWikiItem;
-            int c,cmax,ci;
-            cmax = 0;
-            ci = 0;
+            int[] bucketList = new int[20];
+            int c,cIndex=0;
+            int cmax = 0;
             for(int i = 0; i < currentHashTable.size; i++){
             	currentWikiItem = currentHashTable.table[i];
             	c = 0;
-            	
             	while(currentWikiItem != null){
             		c++;
             		currentWikiItem = currentWikiItem.next;
             	}
-            	if(c > cmax){
+            	if(c > cmax) {
             		cmax = c;
-            		ci = i;
+            		cIndex = i;
             	}
+            	
+            	bucketList[c] ++;
+            	
             }
-            System.out.println("d: "+currentHashTable.d);
-            System.out.println("cmax: "+cmax);
-            System.out.println("ci: "+ci);
-            currentWikiItem = currentHashTable.getIndex(ci);
-            while(currentWikiItem.next != null){
-            	System.out.print(currentWikiItem.str + " , ");
-            	currentWikiItem = currentWikiItem.next; 
+
+            
+            System.out.println(cmax);
+            System.out.println();
+            for(int i : bucketList){
+            	System.out.println(i);
             }
-          System.out.println();
+            System.out.println();
+            
+            
+            System.out.println();
+            currentWikiItem = currentHashTable.table[cIndex];
+            while(currentWikiItem != null){
+            	System.out.println(currentWikiItem.str);
+            	currentWikiItem = currentWikiItem.next;
+            }
+            System.out.println();
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
