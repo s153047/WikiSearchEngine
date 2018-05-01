@@ -312,12 +312,13 @@ class Index1 {
     	   	 long[] a = new long[256];
         	 
         	 for(int i = 0 ; i < 256-1;i++ ){
-        		 a[i] = ThreadLocalRandom.current().nextLong((int) Math.pow(2, 63));
+        		 a[i] = ThreadLocalRandom.current().nextLong((1L <<63)-1);
+        		 System.out.println(a[i]);
         	 }
         	 
         	 String s = "heyaheyaheyaheyaheya";
         	
-        	 hashCode(s,a,l);
+        	 System.out.println();
     	 }
  
     			 
