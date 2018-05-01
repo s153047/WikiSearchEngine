@@ -3,15 +3,16 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
- 
+import com.google.common.primitives.*;
+
 class Index1 {
 	public enum Setting{
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.normal;
+	static Setting setting = Setting.pre;
 	static int numRuns = 1;
-	static int numFiles =12;
+	static int numFiles =1;
 	static int startFile = 0;
 	
     String document;
@@ -46,17 +47,18 @@ class Index1 {
     	
     	private final int size;
     	private int n = 0;
-    	int a,b,c,d;
+    	int d,l;
+    	UnsignedLong[] a = new UnsignedLong[256];
+   	 
+
     	WikiItem[] table; 
     	HashTable(int s){
-        	
-
-        	a = r.nextInt(2147483647-1)+1;
-        	b = r.nextInt(2147483647);
-        	c = r.nextInt(2147483647);
+    		
+       	 	for(int i = 0 ; i < 256-1;i++ ){
+       	 		a[i] = UnsignedLong.fromLongBits(ThreadLocalRandom.current().nextLong());
+       	 	}
         	d=0;
         	
-
     		size = s;
     		table = new WikiItem[size];
     		for(int i = 0; i < size; i++){
@@ -71,7 +73,7 @@ class Index1 {
     		
     		if(currentWikiItem == null){ 								// no collision
     			n++;
-    			//table[Index1.hashCode(word,a,b,c) % size] = new WikiItem(word,new DocItem(document,null), null);			
+    			table[Index1.hashCode(word,a,l) % size] = new WikiItem(word,new DocItem(document,null), null);			
     		} else {																// collision
     			
     			while(true){
@@ -96,7 +98,7 @@ class Index1 {
     	}
     	
     	public WikiItem getBucket(String word){
-    		return table[/*Index1.hashCode(word,a,b,c)*/ 1 % size];
+    		return table[Index1.hashCode(word,a,l) % size];
     	}
     	
     	public WikiItem getIndex(int i){
@@ -117,6 +119,7 @@ class Index1 {
             document = word;
             
             currentHashTable = new HashTable(128);
+            currentHashTable.l = 7;
             currentHashTable.insert(word);
             
             while (input.hasNext()) {  
@@ -136,13 +139,14 @@ class Index1 {
                  	
                  	HashTable tmpHashTable = new HashTable(currentHashTable.size * 2);
                  	tmpHashTable.n = currentHashTable.n;
+                 	tmpHashTable.l = currentHashTable.l + 1;
                  	
                  	for(int i = 0; i < currentHashTable.size; i++){									// loop igennem hashTable 
                  		currentWikiItem = currentHashTable.getIndex(i);
 
                  		while(currentWikiItem != null){													// loop igennem wikiItem Linked List
                  			nextWikiItem = currentWikiItem.next;
-                 			currentHashCode = 1; //Index1.hashCode(currentWikiItem.str,tmpHashTable.a,tmpHashTable.b,tmpHashTable.c);
+                 			currentHashCode = Index1.hashCode(currentWikiItem.str,tmpHashTable.a,tmpHashTable.l);
                  			if(tmpHashTable.table[currentHashCode % tmpHashTable.size] == null){			// no collision
                  				tmpHashTable.table[currentHashCode % tmpHashTable.size] = currentWikiItem;
                  				currentWikiItem.next = null;
@@ -208,22 +212,25 @@ class Index1 {
     }
     
 
-    public static int hashCode(String word,long[] a, int l){
+    public static int hashCode(String word,UnsignedLong[] a, int l){
     	// b,c er random seeds fra [0,...,p-1], hvor p = 2^31-1
     	// a fra [1,...,p-1]
-    	long h = 0;
-		long x;
-		long y;
+    	UnsignedLong h = UnsignedLong.ZERO;
+    	UnsignedLong x;
+    	UnsignedLong y;
 		for(int i = 0; i < word.length() / 2; i++){
-			x = word.charAt((i*2)+1);
-			y = word.charAt(i*2);
-			h += (a[i*2] + x) * (a[(i*2)+1] + y);
+			x = UnsignedLong.valueOf(word.charAt((i*2)+1));
+			y = UnsignedLong.valueOf(word.charAt(i*2));
+			h = h.plus( a[i*2].plus(x)).times( (a[(i*2)+1].plus(y) ) );
 		}
-		
-		h += a[word.length()];
-		h = h >> (63 - l);
-    	
-    	return (int) h ;
+		if(word.length() % 2 == 1){
+			h = h.plus(UnsignedLong.valueOf(word.charAt(word.length()-1)).times(a[word.length()]));
+		}
+
+		h = h.plus(a[word.length()]);
+		long j = h.longValue();
+		j = j >>> (63 - l);
+    	return (int) j ;
     }
  
     public ArrayList search(String searchstr) {
@@ -304,25 +311,22 @@ class Index1 {
     }
     
     public static void main(String[] args) {
-    	
-
+    	/*
     	 int l = (int) 20;
-    	 
-    	 for(int k = 0; k < 1000; k++){
-    	   	 long[] a = new long[256];
+    	 for(int k=0; k<100;k++){
+    	   	 UnsignedLong[] a = new UnsignedLong[256];
         	 
         	 for(int i = 0 ; i < 256-1;i++ ){
-        		 a[i] = ThreadLocalRandom.current().nextLong((1L <<63)-1);
-        		 System.out.println(a[i]);
+        		 a[i] = UnsignedLong.fromLongBits(ThreadLocalRandom.current().nextLong());
         	 }
         	 
-        	 String s = "heyaheyaheyaheyaheya";
+        	 String s = "hea";
         	
-        	 System.out.println();
+        	 System.out.println(hashCode(s,a,l));
     	 }
- 
+    	 */
     			 
-    	/*
+    	
     	switch(setting) {
     		case normal : 
     			normal(args);
@@ -333,6 +337,6 @@ class Index1 {
     		case search :
     			searchTest(args);
     			break;
-    	}*/
+    	}
     }
 }
