@@ -10,7 +10,7 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.pre;
-	static int numRuns = 2;
+	static int numRuns = 10;
 	static int numFiles =9;
 	static int startFile = 7;
 	
@@ -47,16 +47,14 @@ class Index1 {
     	
     	private final int size;
     	private int n = 0;
-    	long a,b,c;
+    	int a,b,c;
     	int d;
     	WikiItem[] table; 
     	HashTable(int s){
         	
-    		a = ThreadLocalRandom.current().nextLong(2305843009213693951L-1)+1;
-    		b = ThreadLocalRandom.current().nextLong(2305843009213693951L);
-    		c = ThreadLocalRandom.current().nextLong(2305843009213693951L-1)+1;
-    		
-
+    		a = r.nextInt(2147483647-1)+1;
+    		b = r.nextInt(2147483647);
+    		c = r.nextInt(2147483647-1)+1;
         	d=0;
         	
 
@@ -177,8 +175,8 @@ class Index1 {
             	currentHashTable.insert(word);
             }
             
-            System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
-            System.out.println((double)currentHashTable.n / currentHashTable.size);
+            //System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
+            //System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
             /*
             WikiItem currentWikiItem;
@@ -229,25 +227,25 @@ class Index1 {
     }
     
 
-    public static long hashCode(String word,long a,long b, long c){
-    	// b,c er random seeds fra [0,...,p-1], hvor p = 2^61-1
+    public static long hashCode(String word,int a,int b, int c){
+    	// b,c er random seeds fra [0,...,p-1], hvor p = 2^31-1
     	// a fra [1,...,p-1]
     	long h = 1;
 		long x;
-		long u = (1<<61)-1;
+		long u = (1<<31)-1;
 		
 		
     	for(int i = 0; i<word.length(); i++ ){
     		x = word.charAt(word.length()-1-i);
     		h = h * c + x;
-			h = (h & u) + (h >> 61);
-			h = (h & u) + (h >> 61);
+			h = (h & u) + (h >> 31);
+			h = (h & u) + (h >> 31);
 			h = (h == u) ? 0 : h;
 		}
     	
     	h = a*h+b;
-		h = (h & u) + (h >> 61);
-		h = (h & u) + (h >> 61);
+		h = (h & u) + (h >> 31);
+		h = (h & u) + (h >> 31);
 		h = (h == u) ? 0 : h;
 		
     	return h ;
@@ -351,7 +349,10 @@ class Index1 {
     }
     
     public static void main(String[] args) {
-
+    	
+    	
+    	
+    	
     	switch(setting) {
     		case normal : 
     			normal(args);
