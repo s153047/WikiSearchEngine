@@ -10,9 +10,9 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.pre;
-	static int numRuns = 2;
-	static int numFiles =9;
-	static int startFile = 7;
+	static int numRuns = 10;
+	static int numFiles =7;
+	static int startFile = 5;
 	
     String document;
     HashTable currentHashTable;
@@ -177,8 +177,8 @@ class Index1 {
             	currentHashTable.insert(word);
             }
             
-            System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
-            System.out.println((double)currentHashTable.n / currentHashTable.size);
+           // System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
+            //System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
             /*
             WikiItem currentWikiItem;
