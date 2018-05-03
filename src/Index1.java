@@ -9,10 +9,10 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.col;
-	static int numRuns = 1;
-	static int numFiles =1;
-	static int startFile = 0;
+	static Setting setting = Setting.pre;
+	static int numRuns = 2;
+	static int numFiles =9;
+	static int startFile = 7;
 	
     String document;
     HashTable currentHashTable;
@@ -136,7 +136,7 @@ class Index1 {
                 }
                 
                 if((double) currentHashTable.n / currentHashTable.size > 1.0){
-                	System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 );
+                	//System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 );
                  	long currentHashCode;
                  	WikiItem currentWikiItem, nextWikiItem, currentWikiItem2;
                  	
@@ -176,11 +176,11 @@ class Index1 {
                  }
             	currentHashTable.insert(word);
             }
-
+            
             System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
             System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
-            
+            /*
             WikiItem currentWikiItem;
             int[] bucketList = new int[20];
             int c,cIndex=0;
@@ -221,7 +221,7 @@ class Index1 {
             }
             System.out.println();
             
-            
+            */
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
