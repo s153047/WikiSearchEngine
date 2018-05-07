@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
  
 class Index1 {
@@ -6,8 +7,8 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.search;
-	static int numRuns = 1000;
+	static Setting setting = Setting.pre;
+	static int numRuns = 10;
 	static int numFiles = 5;
 	static int startFile = 0;
     WikiItem start;
@@ -76,29 +77,32 @@ class Index1 {
         console.close();
     }
  
-    public static void preprocessTest(String[] args){
-    	long time, totalTime = 0;
-    	int[] runTime = new int[numFiles];
+    public static int preprocessTest(String[] args, int fileNumber){
+		System.out.println("Preprocessing " + args[fileNumber]);
+    	long time = 0;
+    	int[] timeList = new int[numRuns];
     	
     	
-    	
-    	for(int h = startFile; h < numFiles; h++){
-    		System.out.println("Preprocessing " + args[h]);
-    		totalTime = 0;
-    		
-    		for(int j = 0; j<numRuns; j++){
-    			time = System.currentTimeMillis();
-                Index1 i = new Index1(args[h]);
-                totalTime += System.currentTimeMillis() - time;
-        	}
-    		runTime[h] = ((int) totalTime)/numRuns;
+    	time = 0;
+
+    	for(int j = 0; j<numRuns; j++){
+    		time = System.currentTimeMillis();
+    		Index1 i = new Index1(args[fileNumber]);
+    		timeList[j] = (int) (System.currentTimeMillis() - time);
+    		System.out.println(timeList[j]);
+    	}
+    	System.out.println("-----------------");
+    	Arrays.sort(timeList);
+    	for(int n : timeList){
+    		System.out.println(n);
     	}
     	
-        System.out.println("Preprocessing time: " );
-        for(int j = 0; j < numFiles; j++){
-        	//System.out.println(j*j + " : " + runTime[j]);
-        	System.out.println(runTime[j]);
-        }
+    	if(numRuns % 2 == 0){
+    		return (timeList[numRuns/2] + timeList[(numRuns/2)-1]) /2;
+    	} else {
+    		return timeList[numRuns/2];
+    	}
+    	
     }
     
     public static void searchTest(String[] args){
@@ -130,7 +134,7 @@ class Index1 {
     			normal(args);
     			break;
     		case pre :
-    			preprocessTest(args);
+    			preprocessTest(args, startFile);
     			break;
     		case search :
     			searchTest(args);
