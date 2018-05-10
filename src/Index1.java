@@ -1,6 +1,7 @@
 import java.awt.List;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
  
 class Index1 {
@@ -8,9 +9,9 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.search;
-	static int numRuns = 1000;
-	static int numFiles = 7;
+	static Setting setting = Setting.pre;
+	static int numRuns = 10;
+	static int numFiles = 1;
 	static int startFile = 0;
     WikiItem start;
  
@@ -93,64 +94,73 @@ class Index1 {
         console.close();
     }
  
-    public static void preprocessTest(String[] args){
-    	long time, totalTime = 0;
-    	int[] runTime = new int[numFiles];
+    public static int preprocessTest(String[] args, int fileNumber){
+		System.out.println("Preprocessing " + args[fileNumber]);
+    	long time = 0;
+    	int[] timeList = new int[numRuns];
     	
-    	
-    	
-    	for(int h = startFile; h < numFiles; h++){
-    		System.out.println("Preprocessing " + args[h]);
-    		totalTime = 0;
-    		
-    		for(int j = 0; j<numRuns; j++){
-    			time = System.currentTimeMillis();
-                Index1 i = new Index1(args[h]);
-                totalTime += System.currentTimeMillis() - time;
-        	}
-    		runTime[h] = ((int) totalTime)/numRuns;
+    	time = 0;
+
+    	for(int j = 0; j<numRuns; j++){
+    		time = System.currentTimeMillis();
+    		Index1 i = new Index1(args[fileNumber]);
+    		timeList[j] = (int) (System.currentTimeMillis() - time);
+    	}
+
+    	Arrays.sort(timeList);
+
+    	if(numRuns % 2 == 0){
+    		return (timeList[numRuns/2] + timeList[(numRuns/2)-1]) /2;
+    	} else {
+    		return timeList[numRuns/2];
     	}
     	
-        System.out.println("Preprocessing time: " );
-        for(int j = 0; j < numFiles; j++){
-        	//System.out.println(j*j + " : " + runTime[j]);
-        	System.out.println(runTime[j]);
-        }
     }
     
-    public static void searchTest(String[] args){
-    	long time, totalTime = 0;
-    	long[] runTime = new long[numFiles];
-        
-        
-        for(int h = startFile; h < numFiles; h++){
-        	Index1 i = new Index1(args[h]);
-        	System.out.println("Searching: " + args[h]);
-    		totalTime = 0;
-    		for(int j = 0; j< numRuns; j++){
-    			time = System.currentTimeMillis();
-        		i.search("%&/¤#%&¤/(%");
-                totalTime+= System.currentTimeMillis() - time;
-        	}
-    		runTime[h] = ( totalTime); 
-        }
-        for(int j = 0; j < numFiles; j++){
-        	//System.out.println(j*j + " : " + runTime[j]);
-        	System.out.println(runTime[j]);
-        }
+    public static int searchTest(String[] args, int fileNumber){
+		System.out.println("Preprocessing " + args[fileNumber]);
+    	long time = 0;
+    	int[] timeList = new int[numRuns];
+    	
+    	time = 0;
+    	Index1 i = new Index1(args[fileNumber]);
+    	
+    	for(int j = 0; j<numRuns; j++){
+    		time = System.currentTimeMillis();
+    		i.search("%&/¤#%&¤/(%");
+    		timeList[j] = (int) (System.currentTimeMillis() - time);
+    	}
+
+    	Arrays.sort(timeList);
+
+    	if(numRuns % 2 == 0){
+    		return (timeList[numRuns/2] + timeList[(numRuns/2)-1]) /2;
+    	} else {
+    		return timeList[numRuns/2];
+    	}
     }
     
     public static void main(String[] args) {
-    	
+		int[] list = new int[numFiles];
     	switch(setting) {
     		case normal : 
     			normal(args);
     			break;
     		case pre :
-    			preprocessTest(args);
+    			for(int i = startFile; i < numFiles; i++){
+    				list[i]=preprocessTest(args, i);
+    			}
+    			for(int i : list){
+    				System.out.println(i);
+    			}
     			break;
     		case search :
-    			searchTest(args);
+    			for(int i = startFile; i < numFiles; i++){
+    				list[i]=searchTest(args,i);
+    			}
+    			for(int i : list){
+    				System.out.println(i);
+    			}
     			break;
     	}
     }
