@@ -7,9 +7,9 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.search;
-	static int numRuns = 11;
-	static int numFiles = 3;
+	static Setting setting = Setting.pre;
+	static int numRuns = 10;
+	static int numFiles = 8;
 	static int startFile = 0;
     WikiItem start;
     
