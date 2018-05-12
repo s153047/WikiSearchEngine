@@ -10,9 +10,9 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.search;
-	static int numRuns = 100;
+	static int numRuns = 50;
 	static int numFiles = 8;
-	static int startFile = 2;
+	static int startFile = 0;
     WikiItem start;
  
     private class WikiItem {
