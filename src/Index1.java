@@ -8,10 +8,10 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.pre;
-	static int numRuns = 11;
-	static int numFiles = 2;
-	static int startFile = 0;
+	static Setting setting = Setting.search;
+	static int numRuns = 50;
+	static int numFiles = 7;
+	static int startFile = 6;
     WikiItem startW;
     
     private class WikiItem {
@@ -167,7 +167,9 @@ class Index1 {
     	
     	for(int j = 0; j<numRuns; j++){
     		time = System.currentTimeMillis();
-    		i.search("%&/¤#%&¤/(%");
+    		for(int k = 0; k < 100; k++){
+    			i.search("%&/¤#%&¤/(%");
+    		}
     		timeList[j] = (int) (System.currentTimeMillis() - time);
     	}
 
