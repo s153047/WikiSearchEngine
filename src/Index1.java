@@ -4,10 +4,10 @@ import java.util.Scanner;
  
 class Index1 {
 	public enum Setting{
-		normal, pre, search 
+		normal, pre, search,correct 
 	}
 	
-	static Setting setting = Setting.search;
+	static Setting setting = Setting.correct;
 	static int numRuns = 50;
 	static int numFiles = 8;
 	static int startFile = 0;
@@ -144,6 +144,28 @@ class Index1 {
     			for(int i : list){
     				System.out.println(i);
     			}
+    			break;
+    		case correct :
+    			Index1 i = new Index1(args[startFile]);
+    			 try {
+    		        	Scanner input = new Scanner(new File(args[startFile]), "UTF-8");    
+    		            boolean check = true;
+    		        	String word;
+    		            while (input.hasNext()) {   // Read all words in input
+    		            	word = input.next();
+    		            	word = word.replaceAll("[^A-Za-z0-9]", "");
+    		            	if( ! i.search(word)){
+    		            		check = false;
+    		            	}
+    		            }
+    		            input.close();
+    		        	System.out.println("Did all words exists? " + check);
+    		        	System.out.println("Nonsense word search: " + i.search("%&/¤#%&¤/(%"));
+    		     } catch (FileNotFoundException e) {
+    		            System.out.println("Error reading file " + args[startFile]);
+    		     }
+    			break;
+    		default:
     			break;
     	}
     }
