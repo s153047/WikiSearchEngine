@@ -102,7 +102,6 @@ class Index1 {
     
     public Index1(String filename) {
         String word;
-
         
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
@@ -122,7 +121,7 @@ class Index1 {
               	  word = word.substring(0, word.length() - 1);
                 }
                 
-                if(word.equals("ENDOFDOCUMENT") && input.hasNext()){
+                if(word.equals("---END.OF.DOCUMENT---") && input.hasNext()){
                 	word = input.next();
                 	if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
                   	  word = word.substring(0, word.length() - 1);
