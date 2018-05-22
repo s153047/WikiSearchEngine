@@ -46,7 +46,9 @@ class Index1 {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
             word = input.next();
-            word = word.replaceAll("[^A-Za-z0-9]", "");
+            if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+            	  word = word.substring(0, word.length() - 1);
+            }
             document = word;
             startW = new WikiItem(word,new DocItem(document,null), null);
             current = startW;
@@ -55,13 +57,17 @@ class Index1 {
             	// 1: den er i den første liste
             	// 2: den er ikke i listen
                 word = input.next();
-                word = word.replaceAll("[^A-Za-z0-9]", "");
+                if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+              	  word = word.substring(0, word.length() - 1);
+                }
                 current2 = startW;
                
                 
                 if(word.equals("ENDOFDOCUMENT") && input.hasNext()){
                 	word = input.next();
-                	word = word.replaceAll("[^A-Za-z0-9]", "");
+                	if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+                  	  word = word.substring(0, word.length() - 1);
+                	}
                 	document = word;
                 }
                 	
