@@ -8,10 +8,10 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.search;
-	static int numRuns = 100;
+	static Setting setting = Setting.pre;
+	static int numRuns = 1;
 	static int numFiles = 7;
-	static int startFile = 0;
+	static int startFile = 2;
     WikiItem startW;
     
     private class WikiItem {
@@ -41,7 +41,7 @@ class Index1 {
         WikiItem current,current2, tmp;
         DocItem currentD;
         int n = 1;
-        
+        int d = 1;
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
@@ -63,7 +63,7 @@ class Index1 {
                 current2 = startW;
                
                 
-                if(word.equals("ENDOFDOCUMENT") && input.hasNext()){
+                if(word.equals("---END.OF.DOCUMENT---") && input.hasNext()){
                 	word = input.next();
                 	if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
                   	  word = word.substring(0, word.length() - 1);
@@ -81,7 +81,7 @@ class Index1 {
                 				break;
                 			
                 			if(currentD.next == null){
-                				
+                				d++;
                 				currentD.next = new DocItem(document, null);
                 			}
                 			
@@ -95,6 +95,7 @@ class Index1 {
                 	// 2: Hvis ordet ikke er i den første liste endnu
                 	if(current2.next ==null){
                 		n++;
+                		d++;
                 		current.next = new WikiItem(word,new DocItem(document,null),null);
                 		current = current.next;
                 		break;
@@ -103,7 +104,8 @@ class Index1 {
                 }
             }
             input.close();
-            
+            System.out.println("L_w : " + n);
+            System.out.println("L_d : " + d);
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
         }
