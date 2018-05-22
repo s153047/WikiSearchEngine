@@ -33,12 +33,16 @@ class Index1 {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
             word = input.next();
-            word = word.replaceAll("[^A-Za-z0-9]", "");
+            if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+          	  word = word.substring(0, word.length() - 1);
+          	}
             start = new WikiItem(word, null);
             current = start;
             while (input.hasNext()) {   // Read all words in input
                 word = input.next();
-                word = word.replaceAll("[^A-Za-z0-9]", "");
+                if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+                	  word = word.substring(0, word.length() - 1);
+                }
                 tmp = new WikiItem(word, null);
                 current.next = tmp;
                 current = tmp;
