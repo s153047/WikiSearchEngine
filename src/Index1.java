@@ -7,10 +7,10 @@ class Index1 {
 		normal, pre, search,correct 
 	}
 	
-	static Setting setting = Setting.correct;
+	static Setting setting = Setting.normal;
 	static int numRuns = 50;
 	static int numFiles = 8;
-	static int startFile = 0;
+	static int startFile = 5;
     WikiItem start;
     
     private class WikiItem {
@@ -31,16 +31,23 @@ class Index1 {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
             word = input.next();
-            word = word.replaceAll("[^A-Za-z0-9]", "");
+            if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+            	  word = word.substring(0, word.length() - 1);
+            }
             start = new WikiItem(word, null);
             current = start;
+            int n = 1;
             while (input.hasNext()) {   // Read all words in input
                 word = input.next();
-                word = word.replaceAll("[^A-Za-z0-9]", "");
+                if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+              	  word = word.substring(0, word.length() - 1);
+                }
                 tmp = new WikiItem(word, null);
                 current.next = tmp;
                 current = tmp;
+                n++;
             }
+            System.out.println("n : "+n);
             input.close();
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
@@ -59,8 +66,8 @@ class Index1 {
     }
  
     public static void normal(String[] args) {
-        System.out.println("Preprocessing " + args[0]);
-        Index1 i = new Index1(args[0]);
+        System.out.println("Preprocessing " + args[startFile]);
+        Index1 i = new Index1(args[startFile]);
         Scanner console = new Scanner(System.in);
         for (;;) {
             System.out.println("Input search string or type exit to stop");
