@@ -8,10 +8,10 @@ class Index1 {
 		normal, pre, search,col 
 	}
 	
-	static Setting setting = Setting.pre;
+	static Setting setting = Setting.col;
 	static int numRuns = 1;
-	static int numFiles =12;
-	static int startFile = 11;
+	static int numFiles =3;
+	static int startFile = 2;
 	
     String document;
     HashTable currentHashTable;
@@ -181,16 +181,7 @@ class Index1 {
             System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
             System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
-            int s;
-            for(int i = 0; i < currentHashTable.size; i++){
-            	s=0;
-            	WikiItem currentWikiItem = currentHashTable.table[i];
-            	while(currentWikiItem != null){
-            		s++;
-            		currentWikiItem = currentWikiItem.next;
-            	}
-            	currentHashTable.d += binomial(s, 2);
-            }
+
             
             
             
@@ -354,6 +345,16 @@ class Index1 {
     		d = 0;
     		for(int j = 0; j<numRuns; j++){
                 Index1 i = new Index1(args[h]);
+                int s;
+                for(int k = 0; k < i.currentHashTable.size; k++){
+                	s=0;
+                	WikiItem currentWikiItem = i.currentHashTable.table[k];
+                	while(currentWikiItem != null){
+                		s++;
+                		currentWikiItem = currentWikiItem.next;
+                	}
+                	d += binomial(s, 2);
+                }
                 d += i.currentHashTable.d;
         	}
     		collisions[h] = d / numRuns;
