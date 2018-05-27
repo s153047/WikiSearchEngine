@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,10 +10,10 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.pre;
-	static int numRuns = 10;
-	static int numFiles =7;
-	static int startFile = 5;
+	static Setting setting = Setting.col;
+	static int numRuns = 1;
+	static int numFiles =1;
+	static int startFile = 0;
 	
     String document;
     HashTable currentHashTable;
@@ -40,6 +41,16 @@ class Index1 {
     	}
     }
     
+    private static long binomial(int n, int k)
+    {
+        if (k>n-k)
+            k=n-k;
+
+        long b=1;
+        for (int i=1, m=n; i<=k; i++, m--)
+            b=b*m/i;
+        return b;
+    }
     
     
     private class HashTable{
@@ -55,7 +66,6 @@ class Index1 {
     		a = ThreadLocalRandom.current().nextLong(2305843009213693951L-1)+1;
     		b = ThreadLocalRandom.current().nextLong(2305843009213693951L);
     		c = ThreadLocalRandom.current().nextLong(2305843009213693951L-1)+1;
-    		
 
         	d=0;
         	
@@ -78,7 +88,6 @@ class Index1 {
     		} else {																// collision
     			
     			while(true){
-    				d++;
     				if(currentWikiItem.str.equals(word)){					// den er i linked list
     					
     					if(currentWikiItem.docs.str.equals(document)){
@@ -156,7 +165,6 @@ class Index1 {
 
                  				currentWikiItem2 = tmpHashTable.table[(int)(currentHashCode % tmpHashTable.size)];
                  				while(currentWikiItem2.next != null){
-                 					tmpHashTable.d++;
                  					currentWikiItem2 = currentWikiItem2.next;
                  				}
                  				currentWikiItem2.next = currentWikiItem;
@@ -339,6 +347,16 @@ class Index1 {
     		d = 0;
     		for(int j = 0; j<numRuns; j++){
                 Index1 i = new Index1(args[h]);
+                int s;
+                for(int k = 0; k < i.currentHashTable.size; k++){
+                	s=0;
+                	WikiItem currentWikiItem = i.currentHashTable.table[k];
+                	while(currentWikiItem != null){
+                		s++;
+                		currentWikiItem = currentWikiItem.next;
+                	}
+                	if(s>1) d += binomial(s, 2);
+                }
                 d += i.currentHashTable.d;
         	}
     		collisions[h] = d / numRuns;
@@ -354,6 +372,7 @@ class Index1 {
     }
     
     public static void main(String[] args) {
+    	
 		int[] list = new int[numFiles];
     	switch(setting) {
     		case normal : 
