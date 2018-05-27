@@ -11,7 +11,7 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.col;
-	static int numRuns = 10;
+	static int numRuns = 1;
 	static int numFiles =9;
 	static int startFile = 0;
 	
@@ -125,7 +125,9 @@ class Index1 {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
             word = input.next();
-            word = word.replaceAll("[^A-Za-z0-9]", "");
+            if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+            	  word = word.substring(0, word.length() - 1);
+            }
 
             document = word;
             
@@ -134,12 +136,16 @@ class Index1 {
             
             while (input.hasNext()) {  
                 word = input.next();
-                word = word.replaceAll("[^A-Za-z0-9]", "");
+                if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+              	  word = word.substring(0, word.length() - 1);
+                }
 
                 
                 if(word.equals("ENDOFDOCUMENT") && input.hasNext()){
                 	word = input.next();
-                	word = word.replaceAll("[^A-Za-z0-9]", "");
+                    if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+                  	  word = word.substring(0, word.length() - 1);
+                    }
 
                 	document = word;
                 }
@@ -185,8 +191,8 @@ class Index1 {
             	currentHashTable.insert(word);
             }
             
-           // System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
-            //System.out.println((double)currentHashTable.n / currentHashTable.size);
+           System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
+            System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
             /*
             WikiItem currentWikiItem;
