@@ -11,8 +11,8 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.col;
-	static int numRuns = 1;
-	static int numFiles =1;
+	static int numRuns = 10;
+	static int numFiles =2;
 	static int startFile = 0;
 	
     String document;
@@ -338,37 +338,35 @@ class Index1 {
     	}
     }
 
-    public static void collisionTest(String[] args){
+    public static int collisionTest(String[] args, int fileNumber){
     	
-    	int[] collisions = new int[numFiles];
+    	int[] collisions = new int[numRuns];
     	int d;
-    	for(int h = startFile; h < numFiles; h++){
-    		System.out.println("Preprocessing " + args[h]);
-    		d = 0;
-    		for(int j = 0; j<numRuns; j++){
-                Index1 i = new Index1(args[h]);
-                int s;
-                for(int k = 0; k < i.currentHashTable.size; k++){
-                	s=0;
-                	WikiItem currentWikiItem = i.currentHashTable.table[k];
-                	while(currentWikiItem != null){
-                		s++;
-                		currentWikiItem = currentWikiItem.next;
-                	}
-                	if(s>1) d += binomial(s, 2);
-                }
-                d += i.currentHashTable.d;
-        	}
-    		collisions[h] = d / numRuns;
+		System.out.println("Preprocessing " + args[fileNumber]);
+		
+		for(int j = 0; j<numRuns; j++){
+			d = 0;
+            Index1 i = new Index1(args[fileNumber]);
+            int s;
+            for(int k = 0; k < i.currentHashTable.size; k++){
+            	s=0;
+            	WikiItem currentWikiItem = i.currentHashTable.table[k];
+            	while(currentWikiItem != null){
+            		s++;
+            		currentWikiItem = currentWikiItem.next;
+            	}
+            	if(s>1) d += binomial(s, 2);
+            }
+            collisions[j] = d;
     	}
-    	
-        System.out.println("Collisions: " );
-        for(int j = 0; j < numFiles; j++){
-        	//System.out.println(j*j + " : " + runTime[j]);
-        	System.out.println(collisions[j]);
-        }
-    	
-        
+		Arrays.sort(collisions);
+		
+    	if(numRuns % 2 == 0){
+    		return (collisions[numRuns/2] + collisions[(numRuns/2)-1]) /2;
+    	} else {
+    		return collisions[numRuns/2];
+    	}
+		
     }
     
     public static void main(String[] args) {
@@ -395,7 +393,12 @@ class Index1 {
     			}
     			break;
     		case col :
-    			collisionTest(args);
+    			for(int i = startFile; i < numFiles; i++){
+    				list[i]=collisionTest(args,i);
+    			}
+    			for(int i : list){
+    				System.out.println(i);
+    			}
     			break;
     	}
     }
