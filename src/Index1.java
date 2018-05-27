@@ -8,13 +8,24 @@ class Index1 {
 		normal, pre, search,col 
 	}
 	
-	static Setting setting = Setting.search;
-	static int numRuns = 100;
-	static int numFiles =9;
-	static int startFile = 0;
+	static Setting setting = Setting.pre;
+	static int numRuns = 1;
+	static int numFiles =12;
+	static int startFile = 11;
 	
     String document;
     HashTable currentHashTable;
+    
+    private static long binomial(int n, int k)
+    {
+        if (k>n-k)
+            k=n-k;
+
+        long b=1;
+        for (int i=1, m=n; i<=k; i++, m--)
+            b=b*m/i;
+        return b;
+    }
     
     private class WikiItem {
         String str;
@@ -49,10 +60,9 @@ class Index1 {
     private class HashTable{
     	private final int size;
     	private int n = 0;
-    	int d;
+    	long d;
     	WikiItem[] table; 
     	HashTable(int s){
-    		d = 0;
     		size = s;
     		table = new WikiItem[size];
     		for(int i = 0; i < size; i++){
@@ -70,7 +80,6 @@ class Index1 {
     			table[(word.hashCode() & 0x7fffffff) % size] = new WikiItem(word,new DocItem(document,null), null);			
     		} else {																// collision
     			while(true){
-    				d++;
     				if(currentWikiItem.str.equals(word)){					// den er i linked list
     					
     					if(currentWikiItem.docs.str.equals(document)){
@@ -102,7 +111,6 @@ class Index1 {
     
     public Index1(String filename) {
         String word;
-        
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
@@ -129,7 +137,7 @@ class Index1 {
                 	document = word;
                 }
                 
-                if((double) currentHashTable.n / currentHashTable.size > 1.0){
+                if((double) currentHashTable.n / currentHashTable.size > 0.75){
                 	//System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 );
                  	int currentHashCode;
                  	WikiItem currentWikiItem, nextWikiItem, currentWikiItem2;
@@ -150,7 +158,6 @@ class Index1 {
 
                  				currentWikiItem2 = tmpHashTable.table[currentHashCode % tmpHashTable.size];
                  				while(currentWikiItem2.next != null){
-                 					tmpHashTable.d ++;
                  					currentWikiItem2 = currentWikiItem2.next;
                  				}
                  				currentWikiItem2.next = currentWikiItem;
@@ -174,6 +181,19 @@ class Index1 {
             System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
             System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
+            int s;
+            for(int i = 0; i < currentHashTable.size; i++){
+            	s=0;
+            	WikiItem currentWikiItem = currentHashTable.table[i];
+            	while(currentWikiItem != null){
+            		s++;
+            		currentWikiItem = currentWikiItem.next;
+            	}
+            	currentHashTable.d += binomial(s, 2);
+            }
+            
+            
+            
             /*
             WikiItem currentWikiItem;
             int[] bucketList = new int[20];
@@ -251,7 +271,6 @@ class Index1 {
         		ci = i;
         	}
         }
-        System.out.println("d: "+currentHashTable.d);
         System.out.println("cmax: "+cmax);
         System.out.println("ci: "+ci);
         currentWikiItem = currentHashTable.getIndex(ci);
@@ -311,7 +330,9 @@ class Index1 {
     	
     	for(int j = 0; j<numRuns; j++){
     		time = System.currentTimeMillis();
-    		i.search("the");
+    		for(int k = 0; k < 10000; k++){
+    			i.search("the");
+    		}
     		timeList[j] = (int) (System.currentTimeMillis() - time);
     	}
 
@@ -348,6 +369,7 @@ class Index1 {
     }
     
     public static void main(String[] args) {
+
 		int[] list = new int[numFiles];
     	switch(setting) {
     		case normal : 
