@@ -10,20 +10,21 @@ class Index1 {
 	
 	static Setting setting = Setting.col;
 	static int numRuns = 1;
-	static int numFiles =1;
-	static int startFile = 0;
+	static int numFiles =11;
+	static int startFile = 9;
 	
     String document;
     HashTable currentHashTable;
     
-    private static long binomial(int n, int k)
-    {
-        if (k>n-k)
-            k=n-k;
-
+    private static long binomial(int n, int k){
+        if (k>n-k){
+        	k=n-k;
+        }
+        
         long b=1;
-        for (int i=1, m=n; i<=k; i++, m--)
-            b=b*m/i;
+        for (int i=1, m=n; i<=k; i++, m--){
+        	b=b*m/i;
+        }
         return b;
     }
     
