@@ -12,7 +12,7 @@ class Index1 {
 	
 	static Setting setting = Setting.col;
 	static int numRuns = 10;
-	static int numFiles =2;
+	static int numFiles =9;
 	static int startFile = 0;
 	
     String document;
