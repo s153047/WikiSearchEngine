@@ -10,8 +10,8 @@ class Index1 {
 	
 	static Setting setting = Setting.col;
 	static int numRuns = 1;
-	static int numFiles =3;
-	static int startFile = 2;
+	static int numFiles =1;
+	static int startFile = 0;
 	
     String document;
     HashTable currentHashTable;
@@ -353,7 +353,7 @@ class Index1 {
                 		s++;
                 		currentWikiItem = currentWikiItem.next;
                 	}
-                	d += binomial(s, 2);
+                	if(s>1) d += binomial(s, 2);
                 }
                 d += i.currentHashTable.d;
         	}
