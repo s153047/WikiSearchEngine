@@ -13,8 +13,8 @@ class Index1 {
 	
 	static Setting setting = Setting.pre;
 	static int numRuns = 10;
-	static int numFiles =7;
-	static int startFile = 0;
+	static int numFiles =10;
+	static int startFile = 9;
 	
     String document;
     HashTable currentHashTable;
@@ -124,7 +124,9 @@ class Index1 {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
             word = input.next();
-            word = word.replaceAll("[^A-Za-z0-9]", "");
+            if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+            	  word = word.substring(0, word.length() - 1);
+              }
             document = word;
             
             currentHashTable = new HashTable(128);
@@ -133,11 +135,15 @@ class Index1 {
             
             while (input.hasNext()) {  
                 word = input.next();
-                word = word.replaceAll("[^A-Za-z0-9]", "");
+                if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+                	  word = word.substring(0, word.length() - 1);
+                  }
                 
                 if(word.equals("ENDOFDOCUMENT") && input.hasNext()){
                 	word = input.next();
-                	word = word.replaceAll("[^A-Za-z0-9]", "");
+                    if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+                    	  word = word.substring(0, word.length() - 1);
+                      }
                 	document = word;
                 }
                 
