@@ -10,10 +10,10 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.pre;
+	static Setting setting = Setting.normal;
 	static int numRuns = 10;
 	static int numFiles =7;
-	static int startFile = 2;
+	static int startFile = 0;
 	
     String document;
     HashTable currentHashTable;
@@ -66,7 +66,8 @@ class Index1 {
     		a = ThreadLocalRandom.current().nextLong(2305843009213693951L-1)+1;
     		b = ThreadLocalRandom.current().nextLong(2305843009213693951L);
     		c = ThreadLocalRandom.current().nextLong(2305843009213693951L-1)+1;
-
+    		
+    		System.out.println("a: "+a +" | b : " +b+" | c : " +c);
         	d=0;
         	
 
@@ -141,7 +142,7 @@ class Index1 {
                 }
 
                 
-                if(word.equals("ENDOFDOCUMENT") && input.hasNext()){
+                if(word.equals("---END.OF.DOCUMENT---") && input.hasNext()){
                 	word = input.next();
                     if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
                   	  word = word.substring(0, word.length() - 1);
