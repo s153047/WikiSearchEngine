@@ -11,10 +11,10 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.pre;
-	static int numRuns = 10;
-	static int numFiles =10;
-	static int startFile = 9;
+	static Setting setting = Setting.normal;
+	static int numRuns = 1;
+	static int numFiles =7;
+	static int startFile = 6;
 	
     String document;
     HashTable currentHashTable;
@@ -124,7 +124,7 @@ class Index1 {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
             word = input.next();
-            if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+            if ( (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) && word.length()>1) {
             	  word = word.substring(0, word.length() - 1);
               }
             document = word;
@@ -135,13 +135,13 @@ class Index1 {
             
             while (input.hasNext()) {  
                 word = input.next();
-                if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+                if ( (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) && word.length()>1) {
                 	  word = word.substring(0, word.length() - 1);
                   }
                 
-                if(word.equals("ENDOFDOCUMENT") && input.hasNext()){
+                if(word.equals("---END.OF.DOCUMENT---") && input.hasNext()){
                 	word = input.next();
-                    if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+                    if ( (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) && word.length()>1) {
                     	  word = word.substring(0, word.length() - 1);
                       }
                 	document = word;
@@ -191,45 +191,7 @@ class Index1 {
 
             System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
             System.out.println((double)currentHashTable.n / currentHashTable.size);
-            input.close();
-            /*
-            WikiItem currentWikiItem;
-            int[] bucketList = new int[20];
-            int c,cIndex=0;
-            int cmax = 0;
-            for(int i = 0; i < currentHashTable.size; i++){
-            	currentWikiItem = currentHashTable.table[i];
-            	c = 0;
-            	while(currentWikiItem != null){
-            		c++;
-            		currentWikiItem = currentWikiItem.next;
-            	}
-            	if(c > cmax) {
-            		cmax = c;
-            		cIndex = i;
-            	}
-            	
-            	bucketList[c] ++;
-            	
-            }
-
-            
-            System.out.println(cmax);
-            System.out.println();
-            for(int i : bucketList){
-            	System.out.println(i);
-            }
-            System.out.println();
-            
-            
-            System.out.println();
-            currentWikiItem = currentHashTable.table[cIndex];
-            while(currentWikiItem != null){
-            	System.out.println(currentWikiItem.str);
-            	currentWikiItem = currentWikiItem.next;
-            }
-            System.out.println();
-            */            
+            input.close();   
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
         }
@@ -368,7 +330,7 @@ class Index1 {
     }
     
     public static void main(String[] args) {
-    	
+
 		int[] list = new int[numFiles];
     	switch(setting) {
     		case normal : 
