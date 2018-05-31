@@ -256,12 +256,10 @@ class Index1 {
     		x = word.charAt(word.length()-1-i);
     		h = h * c + x;
 			h = (h & u) + (h >> 61);
-			h = (h & u) + (h >> 61);
 			h = (h == u) ? 0 : h;
 		}
     	
     	h = a*h+b;
-		h = (h & u) + (h >> 61);
 		h = (h & u) + (h >> 61);
 		h = (h == u) ? 0 : h;
 		
@@ -377,7 +375,7 @@ class Index1 {
     }
     
     public static void main(String[] args) {
-    	
+
 		int[] list = new int[numFiles];
     	switch(setting) {
     		case normal : 
