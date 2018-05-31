@@ -11,10 +11,10 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.normal;
-	static int numRuns = 1;
-	static int numFiles =7;
-	static int startFile = 6;
+	static Setting setting = Setting.col;
+	static int numRuns = 3;
+	static int numFiles =6;
+	static int startFile = 0;
 	
     String document;
     HashTable currentHashTable;
@@ -209,7 +209,7 @@ class Index1 {
 		for(int i = 0; i < word.length() / 2; i++){
 			x = UnsignedLong.valueOf(word.charAt((i*2)+1));
 			y = UnsignedLong.valueOf(word.charAt(i*2));
-			h = h.plus( a[i*2].plus(x)).times( (a[(i*2)+1].plus(y) ) );
+			h = h.plus( a[i*2].plus(x)).times( (a[(i*2)+1]) );
 		}
 		if(word.length() % 2 == 1){
 			h = h.plus(UnsignedLong.valueOf(word.charAt(word.length()-1)).times(a[word.length()]));
@@ -330,6 +330,7 @@ class Index1 {
     }
     
     public static void main(String[] args) {
+
 
 		int[] list = new int[numFiles];
     	switch(setting) {
