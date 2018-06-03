@@ -11,10 +11,10 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.col;
-	static int numRuns = 3;
-	static int numFiles =6;
-	static int startFile = 0;
+	static Setting setting = Setting.pre;
+	static int numRuns = 10;
+	static int numFiles =11;
+	static int startFile = 2;
 	
     String document;
     HashTable currentHashTable;
@@ -60,8 +60,8 @@ class Index1 {
     	private int n = 0;
     	int l;
     	UnsignedLong[] a = new UnsignedLong[256];
-   	 
-
+   	 	long a2,b2,c2;
+   	 	
     	WikiItem[] table; 
     	HashTable(int s){
     		
@@ -69,6 +69,10 @@ class Index1 {
        	 		a[i] = UnsignedLong.fromLongBits(ThreadLocalRandom.current().nextLong());
        	 	}
         	
+    		a2 = ThreadLocalRandom.current().nextLong(2305843009213693951L-1)+1;
+    		b2 = ThreadLocalRandom.current().nextLong(2305843009213693951L);
+    		c2 = ThreadLocalRandom.current().nextLong(2305843009213693951L-1)+1;
+       	 	
     		size = s;
     		table = new WikiItem[size];
     		for(int i = 0; i < size; i++){
@@ -83,7 +87,7 @@ class Index1 {
     		
     		if(currentWikiItem == null){ 								// no collision
     			n++;
-    			table[Index1.hashCode(word,a,l) % size] = new WikiItem(word,new DocItem(document,null), null);			
+    			table[(int)(Index1.hashCode(word,a,l,a2,b2,c2) % size)] = new WikiItem(word,new DocItem(document,null), null);			
     		} else {																// collision
     			
     			while(true){
@@ -107,7 +111,7 @@ class Index1 {
     	}
     	
     	public WikiItem getBucket(String word){
-    		return table[Index1.hashCode(word,a,l) % size];
+    		return table[(int)(Index1.hashCode(word,a,l,a2,b2,c2) % size)];
     	}
     	
     	public WikiItem getIndex(int i){
@@ -118,7 +122,7 @@ class Index1 {
     
     public Index1(String filename) {
         String word;
-
+        
         
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
@@ -149,7 +153,7 @@ class Index1 {
                 
                 if((double) currentHashTable.n / currentHashTable.size > 1.0){
                 	//System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 );
-                 	int currentHashCode;
+                 	long currentHashCode;
                  	WikiItem currentWikiItem, nextWikiItem, currentWikiItem2;
                  	
                  	HashTable tmpHashTable = new HashTable(currentHashTable.size * 2);
@@ -161,13 +165,13 @@ class Index1 {
 
                  		while(currentWikiItem != null){													// loop igennem wikiItem Linked List
                  			nextWikiItem = currentWikiItem.next;
-                 			currentHashCode = Index1.hashCode(currentWikiItem.str,tmpHashTable.a,tmpHashTable.l);
-                 			if(tmpHashTable.table[currentHashCode % tmpHashTable.size] == null){			// no collision
-                 				tmpHashTable.table[currentHashCode % tmpHashTable.size] = currentWikiItem;
+                 			currentHashCode = Index1.hashCode(currentWikiItem.str,tmpHashTable.a,tmpHashTable.l,tmpHashTable.a2,tmpHashTable.b2,tmpHashTable.c2);
+                 			if(tmpHashTable.table[(int)(currentHashCode % tmpHashTable.size)] == null){			// no collision
+                 				tmpHashTable.table[(int)(currentHashCode % tmpHashTable.size)] = currentWikiItem;
                  				currentWikiItem.next = null;
                  			} else {																											// collision
 
-                 				currentWikiItem2 = tmpHashTable.table[currentHashCode % tmpHashTable.size];
+                 				currentWikiItem2 = tmpHashTable.table[(int)(currentHashCode % tmpHashTable.size)];
                  				while(currentWikiItem2.next != null){
                  					currentWikiItem2 = currentWikiItem2.next;
                  				}
@@ -198,7 +202,7 @@ class Index1 {
     }
     
 
-    public static int hashCode(String word,UnsignedLong[] a, int l){
+    public static long hashCode(String word,UnsignedLong[] a, int l, long a2, long b2, long c2){
     	// UnsignedLong primitiven er fra Guava biblioteket lavet af Google.
     	// a består af 256 UnsignedLong mellem 0 og 2^64-1.
     	// 2^l er størrelsen af hash tabellen.
@@ -206,10 +210,12 @@ class Index1 {
     	UnsignedLong x;
     	UnsignedLong y;
     	
+    	if(word.length() > 256) return hashCode2(word, a2, b2, c2);
+    	
 		for(int i = 0; i < word.length() / 2; i++){
 			x = UnsignedLong.valueOf(word.charAt((i*2)+1));
 			y = UnsignedLong.valueOf(word.charAt(i*2));
-			h = h.plus( a[i*2].plus(x)).times( (a[(i*2)+1]) );
+			h = h.plus( a[i*2].plus(x)).times( (a[(i*2)+1].plus(y)) );
 		}
 		if(word.length() % 2 == 1){
 			h = h.plus(UnsignedLong.valueOf(word.charAt(word.length()-1)).times(a[word.length()]));
@@ -218,9 +224,31 @@ class Index1 {
 		h = h.plus(a[word.length()]);
 		long j = h.longValue();						//ingen bitshift for UnsignedLong
 		j = j >>> (64 - l);
-    	return (int) j ;
+    	return j ;
     }
  
+    public static long hashCode2(String word,long a,long b, long c){
+    	// b,c er random seeds fra [0,...,p-1], hvor p = 2^61-1
+    	// a fra [1,...,p-1]
+    	long h = 1;
+		long x;
+		long p = (1<<61)-1;
+		
+		
+    	for(int i = 0; i<word.length(); i++ ){
+    		x = word.charAt(word.length()-1-i);
+    		h = h * c + x;
+			h = (h & p) + (h >> 61);
+			h = (h == p) ? 0 : h;
+		}
+    	
+    	h = a*h+b;
+		h = (h & p) + (h >> 61);
+		h = (h == p) ? 0 : h;
+    	return h ;
+    }
+    
+    
     public ArrayList search(String searchstr) {
     	WikiItem currentWikiItem = currentHashTable.getBucket(searchstr);
     	 ArrayList<String> list = new ArrayList<String>();
