@@ -10,10 +10,10 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.normal;
+	static Setting setting = Setting.pre;
 	static int numRuns = 10;
-	static int numFiles =7;
-	static int startFile = 0;
+	static int numFiles =11;
+	static int startFile = 2;
 	
     String document;
     HashTable currentHashTable;
@@ -66,10 +66,6 @@ class Index1 {
     		a = ThreadLocalRandom.current().nextLong(2305843009213693951L-1)+1;
     		b = ThreadLocalRandom.current().nextLong(2305843009213693951L);
     		c = ThreadLocalRandom.current().nextLong(2305843009213693951L-1)+1;
-    		
-    		System.out.println("a: "+a +" | b : " +b+" | c : " +c);
-        	d=0;
-        	
 
     		size = s;
     		table = new WikiItem[size];
@@ -125,7 +121,7 @@ class Index1 {
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
-            word = input.next();
+            word = input.next().toLowerCase();
             if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
             	  word = word.substring(0, word.length() - 1);
             }
@@ -136,14 +132,14 @@ class Index1 {
             currentHashTable.insert(word);
             
             while (input.hasNext()) {  
-                word = input.next();
+                word = input.next().toLowerCase();
                 if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
               	  word = word.substring(0, word.length() - 1);
                 }
 
                 
                 if(word.equals("---END.OF.DOCUMENT---") && input.hasNext()){
-                	word = input.next();
+                	word = input.next().toLowerCase();
                     if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
                   	  word = word.substring(0, word.length() - 1);
                     }
@@ -249,19 +245,19 @@ class Index1 {
     	// a fra [1,...,p-1]
     	long h = 1;
 		long x;
-		long u = (1<<61)-1;
+		long p = (1<<61)-1;
 		
 		
     	for(int i = 0; i<word.length(); i++ ){
     		x = word.charAt(word.length()-1-i);
     		h = h * c + x;
-			h = (h & u) + (h >> 61);
-			h = (h == u) ? 0 : h;
+			h = (h & p) + (h >> 61);
+			h = (h == p) ? 0 : h;
 		}
     	
     	h = a*h+b;
-		h = (h & u) + (h >> 61);
-		h = (h == u) ? 0 : h;
+		h = (h & p) + (h >> 61);
+		h = (h == p) ? 0 : h;
 		
     	return h ;
     }
