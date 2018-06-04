@@ -127,7 +127,7 @@ class Index1 {
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
-            word = input.next();
+            word = input.next().toLowerCase();
             if ( (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) && word.length()>1) {
             	  word = word.substring(0, word.length() - 1);
               }
@@ -138,13 +138,13 @@ class Index1 {
             currentHashTable.insert(word);
             
             while (input.hasNext()) {  
-                word = input.next();
+                word = input.next().toLowerCase();
                 if ( (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) && word.length()>1) {
                 	  word = word.substring(0, word.length() - 1);
                   }
                 
-                if(word.equals("---END.OF.DOCUMENT---") && input.hasNext()){
-                	word = input.next();
+                if(word.equals("---end.of.document---") && input.hasNext()){
+                	word = input.next().toLowerCase();
                     if ( (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) && word.length()>1) {
                     	  word = word.substring(0, word.length() - 1);
                       }
@@ -358,7 +358,6 @@ class Index1 {
     }
     
     public static void main(String[] args) {
-
 
 		int[] list = new int[numFiles];
     	switch(setting) {
