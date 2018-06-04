@@ -11,7 +11,7 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.pre;
+	static Setting setting = Setting.col;
 	static int numRuns = 10;
 	static int numFiles =11;
 	static int startFile = 2;
