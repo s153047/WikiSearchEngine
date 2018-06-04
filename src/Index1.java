@@ -356,6 +356,7 @@ class Index1 {
             		s++;
             		currentWikiItem = currentWikiItem.next;
             	}
+            	s--;
             	if(s>1) d += binomial(s, 2);
             }
             collisions[j] = d;
