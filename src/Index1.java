@@ -11,7 +11,7 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.pre;
+	static Setting setting = Setting.col;
 	static int numRuns = 10;
 	static int numFiles =11;
 	static int startFile = 2;
@@ -61,6 +61,7 @@ class Index1 {
     	int l;
     	UnsignedLong[] a = new UnsignedLong[256];
    	 	long a2,b2,c2;
+   	 	long[] longArray = new long[32];
    	 	
     	WikiItem[] table; 
     	HashTable(int s){
@@ -87,7 +88,7 @@ class Index1 {
     		
     		if(currentWikiItem == null){ 								// no collision
     			n++;
-    			table[(int)(Index1.hashCode(word,a,l,a2,b2,c2) % size)] = new WikiItem(word,new DocItem(document,null), null);			
+    			table[(int)(Index1.hashCode(word,a,l,a2,b2,c2,longArray) % size)] = new WikiItem(word,new DocItem(document,null), null);			
     		} else {																// collision
     			
     			while(true){
@@ -111,7 +112,7 @@ class Index1 {
     	}
     	
     	public WikiItem getBucket(String word){
-    		return table[(int)(Index1.hashCode(word,a,l,a2,b2,c2) % size)];
+    		return table[(int)(Index1.hashCode(word,a,l,a2,b2,c2,longArray) % size)];
     	}
     	
     	public WikiItem getIndex(int i){
@@ -165,7 +166,7 @@ class Index1 {
 
                  		while(currentWikiItem != null){													// loop igennem wikiItem Linked List
                  			nextWikiItem = currentWikiItem.next;
-                 			currentHashCode = Index1.hashCode(currentWikiItem.str,tmpHashTable.a,tmpHashTable.l,tmpHashTable.a2,tmpHashTable.b2,tmpHashTable.c2);
+                 			currentHashCode = Index1.hashCode(currentWikiItem.str,tmpHashTable.a,tmpHashTable.l,tmpHashTable.a2,tmpHashTable.b2,tmpHashTable.c2,tmpHashTable.longArray);
                  			if(tmpHashTable.table[(int)(currentHashCode % tmpHashTable.size)] == null){			// no collision
                  				tmpHashTable.table[(int)(currentHashCode % tmpHashTable.size)] = currentWikiItem;
                  				currentWikiItem.next = null;
@@ -202,7 +203,7 @@ class Index1 {
     }
     
 
-    public static long hashCode(String word,UnsignedLong[] a, int l, long a2, long b2, long c2){
+    public static long hashCode(String word,UnsignedLong[] a, int l, long a2, long b2, long c2, long[] longArray){
     	// UnsignedLong primitiven er fra Guava biblioteket lavet af Google.
     	// a består af 256 UnsignedLong mellem 0 og 2^64-1.
     	// 2^l er størrelsen af hash tabellen.
@@ -211,6 +212,41 @@ class Index1 {
     	UnsignedLong y;
     	
     	if(word.length() > 256) return hashCode2(word, a2, b2, c2);
+    	
+    	byte[] byteArray;
+		try {
+			byteArray = word.getBytes("UTF-8");
+	    	if( word.length() == byteArray.length){
+	    		
+	    		int d = (word.length() +7 ) >>3;
+                //memory copy
+                for(int i = 0; i < d; i++){
+                	int k = byteArray.length-i*8;
+                	int j=0;
+                	longArray[i] = 0;
+                	while(j < k && j < 8){
+                		longArray[i] = ((longArray[i]<< 8) | (byteArray[i*8+j] & 0xFF));
+                		j++;
+                	}
+                }
+                for(int i = 0; i < d/2; i++){
+        			x = UnsignedLong.valueOf(longArray[(i*2)+1]);
+        			y = UnsignedLong.valueOf(longArray[i*2]);
+        			h = h.plus( a[i*2].plus(x)).times( (a[(i*2)+1].plus(y) ) );
+        		}
+        		if(d % 2 == 1){
+        			h = h.plus(UnsignedLong.valueOf(longArray[d-1]).times(a[d]));
+        		}
+
+        		h = h.plus(a[d]);
+        		long j = h.longValue();						//ingen bitshift for UnsignedLong
+        		j = j >>> (64 - l);
+            	return ( (int) j) ;
+
+	    	}
+		} catch (UnsupportedEncodingException e) {
+			System.out.println("UTF-8 error");
+		} 
     	
 		for(int i = 0; i < word.length() / 2; i++){
 			x = UnsignedLong.valueOf(word.charAt((i*2)+1));
@@ -358,7 +394,7 @@ class Index1 {
     }
     
     public static void main(String[] args) {
-
+		
 		int[] list = new int[numFiles];
     	switch(setting) {
     		case normal : 
