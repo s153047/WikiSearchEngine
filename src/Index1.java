@@ -11,9 +11,9 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.pre;
-	static int numRuns = 10;
+	static int numRuns = 1;
 	static int numFiles =11;
-	static int startFile = 2;
+	static int startFile = 10;
 	
     String document;
     HashTable currentHashTable;
@@ -138,7 +138,7 @@ class Index1 {
                 }
 
                 
-                if(word.equals("---END.OF.DOCUMENT---") && input.hasNext()){
+                if(word.equals("---end.of.document---") && input.hasNext()){
                 	word = input.next().toLowerCase();
                     if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
                   	  word = word.substring(0, word.length() - 1);
