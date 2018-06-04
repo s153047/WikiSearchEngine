@@ -8,8 +8,8 @@ class Index1 {
 		normal, pre, search,col 
 	}
 	
-	static Setting setting = Setting.pre;
-	static int numRuns = 10;
+	static Setting setting = Setting.col;
+	static int numRuns = 1;
 	static int numFiles =11;
 	static int startFile = 2;
 	
@@ -61,7 +61,6 @@ class Index1 {
     private class HashTable{
     	private final int size;
     	private int n = 0;
-    	long d;
     	WikiItem[] table; 
     	HashTable(int s){
     		size = s;
@@ -75,7 +74,6 @@ class Index1 {
     		
     		WikiItem currentWikiItem = getBucket(word); 
     		DocItem tmpDocItem; 
-    		
     		if(currentWikiItem == null){ 								// no collision
     			n++;
     			table[(word.hashCode() & 0x7fffffff) % size] = new WikiItem(word,new DocItem(document,null), null);			
@@ -138,8 +136,8 @@ class Index1 {
                 	document = word;
                 }
                 
-                if((double) currentHashTable.n / currentHashTable.size > 1.0){
-                	//System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 );
+                if((double) currentHashTable.n / currentHashTable.size > 0.75){
+                	//System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 +" ("+currentHashTable.d+")");
                  	int currentHashCode;
                  	WikiItem currentWikiItem, nextWikiItem, currentWikiItem2;
                  	
@@ -156,7 +154,7 @@ class Index1 {
                  				tmpHashTable.table[currentHashCode % tmpHashTable.size] = currentWikiItem;
                  				currentWikiItem.next = null;
                  			} else {																											// collision
-
+                 				
                  				currentWikiItem2 = tmpHashTable.table[currentHashCode % tmpHashTable.size];
                  				while(currentWikiItem2.next != null){
                  					currentWikiItem2 = currentWikiItem2.next;
@@ -224,7 +222,6 @@ class Index1 {
             }
             System.out.println();
             */
-            
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
         }
@@ -354,11 +351,14 @@ class Index1 {
             		s++;
             		currentWikiItem = currentWikiItem.next;
             	}
+            	s--;
             	if(s>1) d += binomial(s, 2);
             }
             collisions[j] = d;
     	}
 		Arrays.sort(collisions);
+		
+		
 		
     	if(numRuns % 2 == 0){
     		return (collisions[numRuns/2] + collisions[(numRuns/2)-1]) /2;
