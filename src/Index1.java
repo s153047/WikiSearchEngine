@@ -10,45 +10,53 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.col;
+	static Setting setting = Setting.normal;
 	static int numRuns = 10;
 	static int numFiles =11;
-	static int startFile = 2;
+	static int startFile = 0;
 	
-    String document;
+
+    int docIndex = 1;
+    String[] documentList;
     HashTable currentHashTable;
-    int cmax;
     
     private class WikiItem {
         String str;
-        DocItem docs;
+        int[] docs;
+        int docsIndex=0;
         WikiItem next;
  
-        WikiItem(String s,DocItem d, WikiItem n) {
+        WikiItem(String s,int d, WikiItem n) {
+        	docs = new int[4];
+        	docs[docsIndex]=d;
+        	
             str = s;
-            docs = d;
             next = n;
         }
+        
+        public void insertDoc(int doc){
+        	if(docs.length-1 <= docsIndex){
+        		int[] docsTmp = new int[docs.length*2];
+        		
+        		for(int i = 0; i < docs.length; i++){
+        			docsTmp[i] = docs[i];
+        		}
+        		docs = docsTmp;
+        	}
+        	docsIndex++;
+        	docs[docsIndex] = doc;
+        }
+        
     }
     
-    private class DocItem{
-    	String str;
-    	DocItem next;
-    	
-    	DocItem(String s, DocItem n){
-    		str = s;
-    		next = n;
-    	}
-    }
-    
-    private static long binomial(int n, int k)
-    {
-        if (k>n-k)
-            k=n-k;
-
+    private static long binomial(int n, int k){
+        if (k>n-k){
+        	k=n-k;
+        }
         long b=1;
-        for (int i=1, m=n; i<=k; i++, m--)
-            b=b*m/i;
+        for (int i=1, m=n; i<=k; i++, m--){
+        	b=b*m/i;
+        }
         return b;
     }
     
@@ -77,26 +85,24 @@ class Index1 {
     	public void insert(String word){								// 3 situationer:
     		
     		WikiItem currentWikiItem = getBucket(word); 
-    		DocItem tmpDocItem; 
     		
     		if(currentWikiItem == null){ 								// no collision
     			n++;
-    			table[(int)(Index1.hashCode(word,a,b,c) % size)] = new WikiItem(word,new DocItem(document,null), null);			
+    			table[(int)(Index1.hashCode(word,a,b,c) % size)] = new WikiItem(word, docIndex, null);			
     		} else {																// collision
     			
     			while(true){
     				if(currentWikiItem.str.equals(word)){					// den er i linked list
     					
-    					if(currentWikiItem.docs.str.equals(document)){
+    					if(currentWikiItem.docs[currentWikiItem.docsIndex] == docIndex){
     						return;
     					}
-    					tmpDocItem = new DocItem(document,currentWikiItem.docs);
-    					currentWikiItem.docs = tmpDocItem;
+    					currentWikiItem.insertDoc(docIndex);
     					return;
     					
     				} else if(currentWikiItem.next == null) {				// den er ikke i linked list
     					n++;
-    					currentWikiItem.next = new WikiItem(word,new DocItem(document,null), null);
+    					currentWikiItem.next = new WikiItem(word,docIndex, null);
     					return;
     				}
     				currentWikiItem = currentWikiItem.next;
@@ -116,7 +122,6 @@ class Index1 {
     
     public Index1(String filename) {
         String word;
-
         
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
@@ -126,7 +131,8 @@ class Index1 {
             	  word = word.substring(0, word.length() - 1);
             }
 
-            document = word;
+            documentList = new String[4];
+            documentList[docIndex] = word;
             
             currentHashTable = new HashTable(128);
             currentHashTable.insert(word);
@@ -143,8 +149,18 @@ class Index1 {
                     if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
                   	  word = word.substring(0, word.length() - 1);
                     }
-
-                	document = word;
+                    docIndex++;
+                    
+                    if( documentList.length <= docIndex){
+                		String[] docListTmp = new String[documentList.length*2];
+                		
+                		for(int i = 0; i < documentList.length; i++){
+                			docListTmp[i] = documentList[i];
+                		}
+                		documentList = docListTmp;
+                    }
+                    
+                	documentList[docIndex] = word;
                 }
                 
                 if((double) currentHashTable.n / currentHashTable.size > 1.0){
@@ -191,49 +207,9 @@ class Index1 {
            System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
             System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
-            /*
-            WikiItem currentWikiItem;
-            int[] bucketList = new int[20];
-            int c,cIndex=0;
-            int cmax = 0;
-            for(int i = 0; i < currentHashTable.size; i++){
-            	currentWikiItem = currentHashTable.table[i];
-            	c = 0;
-            	while(currentWikiItem != null){
-            		c++;
-            		currentWikiItem = currentWikiItem.next;
-            	}
-            	if(c > cmax) {
-            		cmax = c;
-            		cIndex = i;
-            	}
-            	
-            	bucketList[c] ++;
-            	
+            for(String s : documentList){
+            	System.out.println(s);
             }
-            System.out.println();
-            System.out.println(currentHashTable.a);
-            System.out.println(currentHashTable.b);
-            System.out.println(currentHashTable.c);
-            
-            System.out.println(cmax);
-            System.out.println();
-            for(int i : bucketList){
-            	System.out.println(i);
-            }
-            System.out.println();
-            
-            
-            System.out.println();
-            currentWikiItem = currentHashTable.table[cIndex];
-            while(currentWikiItem != null){
-            	System.out.println(currentWikiItem.str);
-            	currentWikiItem = currentWikiItem.next;
-            }
-            System.out.println();
-            
-            */
-            
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
         }
@@ -262,19 +238,23 @@ class Index1 {
     	return h ;
     }
  
-    public ArrayList search(String searchstr) {
+    public int[] search(String searchstr) {
     	WikiItem currentWikiItem = currentHashTable.getBucket(searchstr);
     	 ArrayList<String> list = new ArrayList<String>();
     	while(currentWikiItem != null){
 			if(currentWikiItem.str.equals(searchstr)){
-				for(DocItem doc = currentWikiItem.docs ; doc != null; doc = doc.next){
+				for(int d : currentWikiItem.docs){
+					System.out.println(d);
+				}
+				return currentWikiItem.docs;
+				/*for(DocItem doc = currentWikiItem.docs ; doc != null; doc = doc.next){
                 	list.add(doc.str);
                 }
-				break;
+				break;*/
 			}
 			currentWikiItem = currentWikiItem.next;
 		}
-        return list;
+        return new int[4];
     }
  
     public static void normal(String[] args) {
