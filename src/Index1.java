@@ -10,7 +10,7 @@ class Index1 {
 	
 	static Setting setting = Setting.pre;
 	static int numRuns = 10;
-	static int numFiles =6;
+	static int numFiles =11;
 	static int startFile = 2;
 	
     String document;
@@ -136,7 +136,7 @@ class Index1 {
                 	document = word;
                 }
                 
-                if((double) currentHashTable.n / currentHashTable.size > 1){
+                if((double) currentHashTable.n / currentHashTable.size > 0.75){
                 	//System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 +" ("+currentHashTable.d+")");
                  	int currentHashCode;
                  	WikiItem currentWikiItem, nextWikiItem, currentWikiItem2;
