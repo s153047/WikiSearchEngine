@@ -11,9 +11,9 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.pre;
-	static int numRuns = 10;
-	static int numFiles =11;
-	static int startFile = 9;
+	static int numRuns = 1;
+	static int numFiles =6;
+	static int startFile = 5;
 	
 
     int docIndex = 1;
@@ -293,6 +293,7 @@ class Index1 {
     	for(int j = 0; j<numRuns; j++){
     		time = System.currentTimeMillis();
     		Index1 i = new Index1(args[fileNumber]);
+
     		timeList[j] = (int) (System.currentTimeMillis() - time);
     	}
 
@@ -362,6 +363,7 @@ class Index1 {
     }
     
     public static void main(String[] args) {
+
 		int[] list = new int[numFiles];
     	switch(setting) {
     		case normal : 
