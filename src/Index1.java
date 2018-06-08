@@ -136,7 +136,7 @@ class Index1 {
                 	document = word;
                 }
                 
-                if((double) currentHashTable.n / currentHashTable.size > 0.75){
+                if((double) currentHashTable.n / currentHashTable.size > 1.0){
                 	//System.out.println("Making new Hash Table, "+ currentHashTable.n + " / " + currentHashTable.size * 2 +" ("+currentHashTable.d+")");
                  	int currentHashCode;
                  	WikiItem currentWikiItem, nextWikiItem, currentWikiItem2;
