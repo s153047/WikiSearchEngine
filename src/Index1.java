@@ -251,12 +251,12 @@ class Index1 {
     	for(int i = 0; i<word.length(); i++ ){
     		x = word.charAt(word.length()-1-i);
     		h = h * c + x;
-			h = (h & p) + (h >> 61);
+			h = (h & p) + (h >>> 61);
 			h = (h == p) ? 0 : h;
 		}
     	
     	h = a*h+b;
-		h = (h & p) + (h >> 61);
+		h = (h & p) + (h >>> 61);
 		h = (h == p) ? 0 : h;
 		
     	return h ;
@@ -372,7 +372,9 @@ class Index1 {
     }
     
     public static void main(String[] args) {
-
+    	
+    	String a = "hej";
+    	int b = a.hashCode();
 		int[] list = new int[numFiles];
     	switch(setting) {
     		case normal : 
