@@ -1,7 +1,8 @@
 import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
- 
+
+
 class Index1 {
 	public enum Setting{
 		normal, pre, search,correct 
@@ -10,7 +11,7 @@ class Index1 {
 	static Setting setting = Setting.normal;
 	static int numRuns = 50;
 	static int numFiles = 8;
-	static int startFile = 5;
+	static int startFile = 6;
     WikiItem start;
     
     private class WikiItem {
@@ -22,7 +23,9 @@ class Index1 {
             next = n;
         }
     }
- 
+    
+    
+    
     public Index1(String filename) {
         String word;
         WikiItem current, tmp;
@@ -131,6 +134,26 @@ class Index1 {
     }
     
     public static void main(String[] args) {
+    	
+    	double w = 0;
+    	double d = 0;
+    	
+    	  try {
+          	Scanner input = new Scanner(new File(args[startFile]), "UTF-8");    
+            while(input.hasNext()){
+            	w += input.next().length();
+              	d++;
+            }
+          	System.out.println(w);
+          	System.out.println(d);
+          	System.out.println((w/d));
+          	
+             input.close();
+          } catch (FileNotFoundException e) {
+              System.out.println("Error reading file ");
+          }
+    	
+    	/*
 		int[] list = new int[numFiles];
     	switch(setting) {
     		case normal : 
@@ -174,6 +197,6 @@ class Index1 {
     			break;
     		default:
     			break;
-    	}
+    	}*/
     }
 }
