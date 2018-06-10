@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.instrument.Instrumentation;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -8,10 +9,10 @@ class Index1 {
 		normal, pre, search,correct 
 	}
 	
-	static Setting setting = Setting.normal;
-	static int numRuns = 50;
-	static int numFiles = 8;
-	static int startFile = 6;
+	static Setting setting = Setting.pre;
+	static int numRuns = 10;
+	static int numFiles = 7;
+	static int startFile =2;
     WikiItem start;
     
     private class WikiItem {
@@ -23,9 +24,7 @@ class Index1 {
             next = n;
         }
     }
-    
-    
-    
+   
     public Index1(String filename) {
         String word;
         WikiItem current, tmp;
@@ -33,24 +32,21 @@ class Index1 {
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
-            word = input.next();
+            word = input.next().toLowerCase();
             if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
             	  word = word.substring(0, word.length() - 1);
             }
             start = new WikiItem(word, null);
             current = start;
-            int n = 1;
             while (input.hasNext()) {   // Read all words in input
-                word = input.next();
+                word = input.next().toLowerCase();
                 if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
               	  word = word.substring(0, word.length() - 1);
                 }
                 tmp = new WikiItem(word, null);
                 current.next = tmp;
                 current = tmp;
-                n++;
             }
-            System.out.println("n : "+n);
             input.close();
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
@@ -134,26 +130,7 @@ class Index1 {
     }
     
     public static void main(String[] args) {
-    	
-    	double w = 0;
-    	double d = 0;
-    	
-    	  try {
-          	Scanner input = new Scanner(new File(args[startFile]), "UTF-8");    
-            while(input.hasNext()){
-            	w += input.next().length();
-              	d++;
-            }
-          	System.out.println(w);
-          	System.out.println(d);
-          	System.out.println((w/d));
-          	
-             input.close();
-          } catch (FileNotFoundException e) {
-              System.out.println("Error reading file ");
-          }
-    	
-    	/*
+
 		int[] list = new int[numFiles];
     	switch(setting) {
     		case normal : 
@@ -197,6 +174,6 @@ class Index1 {
     			break;
     		default:
     			break;
-    	}*/
+    	}
     }
 }
