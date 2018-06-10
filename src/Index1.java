@@ -10,7 +10,7 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.search;
-	static int numRuns = 50;
+	static int numRuns = 100;
 	static int numFiles = 8;
 	static int startFile = 0;
     WikiItem start;
@@ -32,14 +32,14 @@ class Index1 {
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
-            word = input.next();
+            word = input.next().toLowerCase();
             if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
           	  word = word.substring(0, word.length() - 1);
           	}
             start = new WikiItem(word, null);
             current = start;
             while (input.hasNext()) {   // Read all words in input
-                word = input.next();
+                word = input.next().toLowerCase();
                 if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
                 	  word = word.substring(0, word.length() - 1);
                 }
