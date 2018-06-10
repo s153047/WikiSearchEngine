@@ -9,10 +9,10 @@ class Index1 {
 		normal, pre, search,correct 
 	}
 	
-	static Setting setting = Setting.pre;
-	static int numRuns = 10;
-	static int numFiles = 7;
-	static int startFile =2;
+	static Setting setting = Setting.normal;
+	static int numRuns = 100;
+	static int numFiles =8;
+	static int startFile =7;
     WikiItem start;
     
     private class WikiItem {
