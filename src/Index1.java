@@ -9,9 +9,9 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.pre;
-	static int numRuns = 1;
+	static int numRuns = 3;
 	static int numFiles = 7;
-	static int startFile = 2;
+	static int startFile = 6;
     WikiItem startW;
     
     private class WikiItem {
@@ -35,13 +35,11 @@ class Index1 {
     		next = n;
     	}
     }
- 
+    String word,document;
+    WikiItem current,current2, tmp;
+    String[] wordArr;
+	DocItem currentD;
     public Index1(String filename) {
-        String word,document;
-        WikiItem current,current2, tmp;
-        DocItem currentD;
-        int n = 1;
-        int d = 1;
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
@@ -56,61 +54,69 @@ class Index1 {
             	// Der er to muligheder:
             	// 1: den er i den første liste
             	// 2: den er ikke i listen
-                word = input.next();
+                word = input.next().toLowerCase();
                 if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
               	  word = word.substring(0, word.length() - 1);
                 }
                 current2 = startW;
                
                 
-                if(word.equals("---END.OF.DOCUMENT---") && input.hasNext()){
-                	word = input.next();
+                if(word.equals("---end.of.document---") && input.hasNext()){
+                	input.nextLine();
+                	input.nextLine();
+                	word = input.nextLine().toLowerCase();
                 	if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
                   	  word = word.substring(0, word.length() - 1);
                 	}
                 	document = word;
+                	wordArr = word.split(" ");
+                	for(String w : wordArr){
+                		insertWord(w);
+                	}
+                	
                 }
                 	
+                insertWord(word);
                 
-                while(current2 != null){
-                	if(current2.str.equals(word)){ // 1: den er i listen
-                		// add til docList, hvis den ikke er der
-                		currentD = current2.docs; 
-                		while(true){
-                			if(currentD.str.equals(document))
-                				break;
-                			
-                			if(currentD.next == null){
-                				d++;
-                				currentD.next = new DocItem(document, null);
-                			}
-                			
-                			currentD = currentD.next;
-                		}
-                		
-                		break;
-                	}
-                	
-                	
-                	// 2: Hvis ordet ikke er i den første liste endnu
-                	if(current2.next ==null){
-                		n++;
-                		d++;
-                		current.next = new WikiItem(word,new DocItem(document,null),null);
-                		current = current.next;
-                		break;
-                	}
-                	current2 = current2.next;
-                }
             }
             input.close();
-            System.out.println("L_w : " + n);
-            System.out.println("L_d : " + d);
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
         }
     }
  
+    public void insertWord(String word){
+
+    	while(current2 != null){
+        	if(current2.str.equals(word)){ // 1: den er i listen
+        		// add til docList, hvis den ikke er der
+        		currentD = current2.docs; 
+        		while(true){
+        			if(currentD.str.equals(document))
+        				break;
+        			
+        			if(currentD.next == null){
+        				currentD.next = new DocItem(document, null);
+        			}
+        			
+        			currentD = currentD.next;
+        		}
+        		
+        		break;
+        	}
+        	
+        	
+        	// 2: Hvis ordet ikke er i den første liste endnu
+        	if(current2.next ==null){
+
+        		current.next = new WikiItem(word,new DocItem(document,null),null);
+        		current = current.next;
+        		break;
+        	}
+        	current2 = current2.next;
+        }
+    }
+    
     public ArrayList search(String searchstr) {
         WikiItem current = startW;
         ArrayList<String> list = new ArrayList<String>();
@@ -127,8 +133,8 @@ class Index1 {
     }
  
     public static void normal(String[] args) {
-        System.out.println("Preprocessing " + args[0]);
-        Index1 i = new Index1(args[0]);
+        System.out.println("Preprocessing " + args[startFile]);
+        Index1 i = new Index1(args[startFile]);
         Scanner console = new Scanner(System.in);
         for (;;) {
             System.out.println("Input search string or type exit to stop");
