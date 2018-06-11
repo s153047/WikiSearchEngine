@@ -10,7 +10,7 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.col;
+	static Setting setting = Setting.normal;
 	static int numRuns = 10;
 	static int numFiles =11;
 	static int startFile = 2;
@@ -116,7 +116,7 @@ class Index1 {
     
     public Index1(String filename) {
         String word;
-
+        String[] wordArr;
         
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
@@ -139,12 +139,20 @@ class Index1 {
 
                 
                 if(word.equals("---end.of.document---") && input.hasNext()){
-                	word = input.next().toLowerCase();
+                	input.nextLine();
+                	input.nextLine();
+                	word = input.nextLine().toLowerCase();
                     if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
                   	  word = word.substring(0, word.length() - 1);
                     }
 
                 	document = word;
+                	
+                	document = word;
+                	wordArr = word.split(" ");
+                	for(String w : wordArr){
+                		currentHashTable.insert(w);
+                	}
                 }
                 
                 if((double) currentHashTable.n / currentHashTable.size > 1.0){
