@@ -147,8 +147,6 @@ class Index1 {
                     }
 
                 	document = word;
-                	
-                	document = word;
                 	wordArr = word.split(" ");
                 	for(String w : wordArr){
                 		currentHashTable.insert(w);
