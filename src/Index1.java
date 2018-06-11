@@ -8,8 +8,8 @@ class Index1 {
 		normal, pre, search,col 
 	}
 	
-	static Setting setting = Setting.normal;
-	static int numRuns = 10;
+	static Setting setting = Setting.search;
+	static int numRuns = 100;
 	static int numFiles =11;
 	static int startFile = 2;
 	
@@ -61,6 +61,7 @@ class Index1 {
     private class HashTable{
     	private final int size;
     	private int n = 0;
+    	private int d = 0;
     	WikiItem[] table; 
     	HashTable(int s){
     		size = s;
@@ -76,6 +77,7 @@ class Index1 {
     		DocItem tmpDocItem; 
     		if(currentWikiItem == null){ 								// no collision
     			n++;
+    			d++;
     			table[(word.hashCode() & 0x7fffffff) % size] = new WikiItem(word,new DocItem(document,null), null);			
     		} else {																// collision
     			while(true){
@@ -84,12 +86,14 @@ class Index1 {
     					if(currentWikiItem.docs.str.equals(document)){
     						return;
     					}
+    					d++;
     					tmpDocItem = new DocItem(document,currentWikiItem.docs);
     					currentWikiItem.docs = tmpDocItem;
     					return;
     					
     				} else if(currentWikiItem.next == null) {				// den er ikke i linked list
     					n++;
+    					d++;
     					currentWikiItem.next = new WikiItem(word,new DocItem(document,null), null);
     					return;
     				}
@@ -110,6 +114,7 @@ class Index1 {
     
     public Index1(String filename) {
         String word;
+        String [] wordArr;
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
@@ -136,6 +141,11 @@ class Index1 {
                   	  word = word.substring(0, word.length() - 1);
                 	}
                 	document = word;
+                	wordArr = word.split(" ");
+                	for(String w : wordArr){
+                		currentHashTable.insert(w);
+                	}
+                	
                 }
                 
                 if((double) currentHashTable.n / currentHashTable.size > 1.0){
@@ -145,6 +155,7 @@ class Index1 {
                  	
                  	HashTable tmpHashTable = new HashTable(currentHashTable.size * 2);
                  	tmpHashTable.n = currentHashTable.n;
+                 	tmpHashTable.d = currentHashTable.d;
                  	
                  	for(int i = 0; i < currentHashTable.size; i++){									// loop igennem hashTable 
                  		currentWikiItem = currentHashTable.getIndex(i);
@@ -181,6 +192,7 @@ class Index1 {
 
             System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
             System.out.println((double)currentHashTable.n / currentHashTable.size);
+            System.out.println("L_d : " + currentHashTable.d);
             input.close();
 
             
