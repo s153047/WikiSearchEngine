@@ -8,7 +8,7 @@ class Index1 {
 		normal, pre, search,col 
 	}
 	
-	static Setting setting = Setting.pre;
+	static Setting setting = Setting.normal;
 	static int numRuns = 10;
 	static int numFiles =11;
 	static int startFile = 2;
@@ -129,7 +129,9 @@ class Index1 {
                 }
                 
                 if(word.equals("---end.of.document---") && input.hasNext()){
-                	word = input.next().toLowerCase();
+                	input.nextLine();
+                	input.nextLine();
+                	word = input.nextLine().toLowerCase();
                 	if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
                   	  word = word.substring(0, word.length() - 1);
                 	}
