@@ -8,7 +8,7 @@ class Index1 {
 		normal, pre, search 
 	}
 	
-	static Setting setting = Setting.pre;
+	static Setting setting = Setting.search;
 	static int numRuns = 3;
 	static int numFiles = 7;
 	static int startFile = 6;
@@ -181,7 +181,7 @@ class Index1 {
     	
     	for(int j = 0; j<numRuns; j++){
     		time = System.currentTimeMillis();
-    		for(int k = 0; k < 100; k++){
+    		for(int k = 0; k < 7; k++){
     			i.search("%&/¤#%&¤/(%");
     		}
     		timeList[j] = (int) (System.currentTimeMillis() - time);
