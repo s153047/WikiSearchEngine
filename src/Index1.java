@@ -1,8 +1,7 @@
+
 import java.io.*;
-import java.lang.instrument.Instrumentation;
 import java.util.Arrays;
 import java.util.Scanner;
-
 
 class Index1 {
 	public enum Setting{
@@ -12,7 +11,7 @@ class Index1 {
 	static Setting setting = Setting.normal;
 	static int numRuns = 100;
 	static int numFiles =8;
-	static int startFile =7;
+	static int startFile =0;
     WikiItem start;
     
     private class WikiItem {
