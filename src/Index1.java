@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
+
+import org.openjdk.jol.info.ClassLayout;
  
 class Index1 {
 	public enum Setting{
@@ -11,8 +13,8 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.normal;
-	static int numRuns = 10;
-	static int numFiles =11;
+	static int numRuns = 3;
+	static int numFiles =12;
 	static int startFile = 2;
 	
     String document;
@@ -54,12 +56,9 @@ class Index1 {
     
     
     private class HashTable{
-    	Random r = new Random();
-    	
     	private final int size;
     	private int n = 0;
     	long a,b,c;
-    	int d;
     	WikiItem[] table; 
     	HashTable(int s){
         	
@@ -197,48 +196,8 @@ class Index1 {
            System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
             System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
-            /*
-            WikiItem currentWikiItem;
-            int[] bucketList = new int[20];
-            int c,cIndex=0;
-            int cmax = 0;
-            for(int i = 0; i < currentHashTable.size; i++){
-            	currentWikiItem = currentHashTable.table[i];
-            	c = 0;
-            	while(currentWikiItem != null){
-            		c++;
-            		currentWikiItem = currentWikiItem.next;
-            	}
-            	if(c > cmax) {
-            		cmax = c;
-            		cIndex = i;
-            	}
-            	
-            	bucketList[c] ++;
-            	
-            }
-            System.out.println();
-            System.out.println(currentHashTable.a);
-            System.out.println(currentHashTable.b);
-            System.out.println(currentHashTable.c);
             
-            System.out.println(cmax);
-            System.out.println();
-            for(int i : bucketList){
-            	System.out.println(i);
-            }
-            System.out.println();
-            
-            
-            System.out.println();
-            currentWikiItem = currentHashTable.table[cIndex];
-            while(currentWikiItem != null){
-            	System.out.println(currentWikiItem.str);
-            	currentWikiItem = currentWikiItem.next;
-            }
-            System.out.println();
-            
-            */
+            System.out.println(ClassLayout.parseClass(WikiItem[].class).toPrintable());
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
