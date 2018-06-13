@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
+
+import org.openjdk.jol.info.ClassLayout;
  
 class Index1 {
 	public enum Setting{
@@ -11,9 +13,9 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.pre;
-	static int numRuns = 1;
-	static int numFiles =6;
-	static int startFile = 5;
+	static int numRuns = 3;
+	static int numFiles =12;
+	static int startFile =11;
 	
 
     int docIndex = 1;
@@ -27,7 +29,7 @@ class Index1 {
  
         WikiItem(String s,int d) {
         	str = s;
-        	docs = new int[4];
+        	docs = new int[1];
         	docs[docsIndex]=d;
         }
         
@@ -77,13 +79,11 @@ class Index1 {
     	
     	public void insert(String word){								// 3 situationer:
     		
-    		//WikiItem currentWikiItem = getBucket(word); 
     		int hashCode=(int)(Index1.hashCode(word,a,b,c) % size);
-    		//WikiItem[] currentBucket = table[hashCode % size];
     		if(hashCode < 0) System.out.println(word);
     		if(table[hashCode] == null){ 								// no collision
     			n++;
-    			table[hashCode] = new WikiItem[2];
+    			table[hashCode] = new WikiItem[1];
     			table[hashCode][0] = new WikiItem(word,docIndex);
     		} else {																// collision
     			int k = 0;
@@ -209,7 +209,6 @@ class Index1 {
 
                  	currentHashTable = tmpHashTable;
                  	//System.out.println("Done doubling");
-                 	
                  	
                       
                     
