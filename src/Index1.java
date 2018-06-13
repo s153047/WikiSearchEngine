@@ -12,8 +12,8 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.normal;
-	static int numRuns = 3;
+	static Setting setting = Setting.pre;
+	static int numRuns = 10;
 	static int numFiles =12;
 	static int startFile =2;
 	
@@ -219,8 +219,6 @@ class Index1 {
            System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
             System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
-            
-            System.out.println(ClassLayout.parseClass(String.class).toPrintable());
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
