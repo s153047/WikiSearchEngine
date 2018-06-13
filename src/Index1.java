@@ -339,9 +339,6 @@ class Index1 {
     }
     
     public static void main(String[] args) {
-    	
-    	String a = "hej";
-    	int b = a.hashCode();
 		int[] list = new int[numFiles];
     	switch(setting) {
     		case normal : 
