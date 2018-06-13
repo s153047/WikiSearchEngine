@@ -12,10 +12,10 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.normal;
-	static int numRuns = 3;
-	static int numFiles =12;
-	static int startFile = 2;
+	static Setting setting = Setting.pre;
+	static int numRuns = 1;
+	static int numFiles =9;
+	static int startFile = 8;
 	
     String document;
     HashTable currentHashTable;
@@ -116,7 +116,7 @@ class Index1 {
     public Index1(String filename) {
         String word;
         String[] wordArr;
-        
+    	int d=1;
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
@@ -138,6 +138,8 @@ class Index1 {
 
                 
                 if(word.equals("---end.of.document---") && input.hasNext()){
+
+					d++;
                 	input.nextLine();
                 	input.nextLine();
                 	word = input.nextLine().toLowerCase();
@@ -197,7 +199,7 @@ class Index1 {
             System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
             
-            System.out.println(ClassLayout.parseClass(WikiItem[].class).toPrintable());
+            System.out.println(d);
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
