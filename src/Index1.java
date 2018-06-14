@@ -13,7 +13,7 @@ class Index1 {
 	static Setting setting = Setting.correct;
 	static int numRuns = 10;
 	static int numFiles =12;
-	static int startFile =2;
+	static int startFile =0;
 	
 
     int docIndex = 1;
@@ -402,6 +402,8 @@ class Index1 {
     		                	  word = word.substring(0, word.length() - 1);
     		                }
     		            	if( i.search(word).length == 0){
+    		            		System.out.println(word);
+    		            		System.out.println(i.hashCode(word, i.currentHashTable.a, i.currentHashTable.b, i.currentHashTable.c) % i.currentHashTable.size);
     		            		check = false;
     		            	}
     		            }
