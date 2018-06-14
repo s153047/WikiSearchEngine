@@ -78,7 +78,6 @@ class Index1 {
     	public void insert(String word){								// 3 situationer:
     		
     		int hashCode=(int)(Index1.hashCode(word,a,b,c) % size);
-    		if(hashCode < 0) System.out.println(word);
     		if(table[hashCode] == null){ 								// no collision
     			n++;
     			table[hashCode] = new WikiItem[1];
@@ -105,7 +104,7 @@ class Index1 {
     				}
     				table[hashCode] =tmpBucket;
     			}
-
+    			
     			table[hashCode][k-1] = new WikiItem(word,docIndex);
 				return;	
     		}
@@ -227,7 +226,7 @@ class Index1 {
     public static long hashCode(String word,long a,long b, long c){
     	// b,c er random seeds fra [0,...,p-1], hvor p = 2^61-1
     	// a fra [1,...,p-1]
-    	return word.hashCode();
+    	return  (word.hashCode() & 0x7fffffff);
     	/*
     	long h = 1;
 		long x;
