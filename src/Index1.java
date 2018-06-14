@@ -12,9 +12,9 @@ class Index1 {
 		normal, pre, search, col, correct
 	}
 	
-	static Setting setting = Setting.correct;
+	static Setting setting = Setting.pre;
 	static int numRuns = 1;
-	static int numFiles =4;
+	static int numFiles =6;
 	static int startFile = 2;
 	
     String document;
