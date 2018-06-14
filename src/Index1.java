@@ -304,7 +304,7 @@ class Index1 {
     	for(int j = 0; j<numRuns; j++){
     		time = System.currentTimeMillis();
     		for(int k = 0; k < 100; k++){
-    			i.search("%&/¤#%&¤/(%");
+    			i.search("the");
     		}
     		timeList[j] = (int) (System.currentTimeMillis() - time);
     	}
