@@ -116,7 +116,6 @@ class Index1 {
     public Index1(String filename) {
         String word;
         String[] wordArr;
-    	int d=1;
         try {
         	Scanner input = new Scanner(new File(filename), "UTF-8");    
             
@@ -138,8 +137,6 @@ class Index1 {
 
                 
                 if(word.equals("---end.of.document---") && input.hasNext()){
-
-					d++;
                 	input.nextLine();
                 	input.nextLine();
                 	word = input.nextLine().toLowerCase();
@@ -198,8 +195,6 @@ class Index1 {
            System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
             System.out.println((double)currentHashTable.n / currentHashTable.size);
             input.close();
-            
-            System.out.println(d);
             
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
