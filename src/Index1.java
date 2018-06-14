@@ -9,13 +9,13 @@ import org.openjdk.jol.info.ClassLayout;
  
 class Index1 {
 	public enum Setting{
-		normal, pre, search, col
+		normal, pre, search, col, correct
 	}
 	
-	static Setting setting = Setting.pre;
+	static Setting setting = Setting.correct;
 	static int numRuns = 1;
 	static int numFiles =9;
-	static int startFile = 8;
+	static int startFile = 2;
 	
     String document;
     HashTable currentHashTable;
@@ -368,6 +368,28 @@ class Index1 {
     				System.out.println(i);
     			}
     			break;
+    		case correct :
+    			Index1 i = new Index1(args[startFile]);
+    			 try {
+    		        	Scanner input = new Scanner(new File(args[startFile]), "UTF-8");    
+    		            boolean check = true;
+    		        	String word;
+    		            while (input.hasNext()) {   // Read all words in input
+    		            	word = input.next().toLowerCase();
+    		            	if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+    		                	  word = word.substring(0, word.length() - 1);
+    		                }
+    		            	if( i.search(word).size() == 0){
+    		            		check = false;
+    		            	}
+    		            }
+    		            input.close();
+    		        	System.out.println("Did all words exists? " + check);
+    		        	System.out.println("Nonsense word search: " + (i.search("%&/¤#%&¤/(%").size() == 0));
+    		     } catch (FileNotFoundException e) {
+    		            System.out.println("Error reading file " + args[startFile]);
+    		     }
+    		break;
     	}
     }
 }
