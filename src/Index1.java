@@ -10,9 +10,9 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.search;
-	static int numRuns = 10;
-	static int numFiles =11;
-	static int startFile = 2;
+	static int numRuns = 100;
+	static int numFiles =10;
+	static int startFile = 9;
 	
     String document;
     HashTable currentHashTable;
