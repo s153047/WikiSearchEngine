@@ -1,20 +1,17 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
-
-import org.openjdk.jol.info.ClassLayout;
  
 class Index1 {
 	public enum Setting{
 		normal, pre, search, col, correct
 	}
 	
-	static Setting setting = Setting.pre;
-	static int numRuns = 1;
-	static int numFiles =6;
+	static Setting setting = Setting.search;
+	static int numRuns = 10;
+	static int numFiles =11;
 	static int startFile = 2;
 	
     String document;
@@ -184,10 +181,7 @@ class Index1 {
                  	
                  	currentHashTable = tmpHashTable;
                  	//System.out.println("Done doubling");
-                 	
-                 	
-                      
-                    
+
                  }
                 if(input.hasNext()) 	currentHashTable.insert(word);
             }
@@ -288,8 +282,8 @@ class Index1 {
     	
     	for(int j = 0; j<numRuns; j++){
     		time = System.currentTimeMillis();
-    		for(int k = 0; k < 100; k++){
-    			i.search("%&/¤#%&¤/(%");
+    		for(int k = 0; k < 10000; k++){
+    			i.search("the");
     		}
     		timeList[j] = (int) (System.currentTimeMillis() - time);
     	}
