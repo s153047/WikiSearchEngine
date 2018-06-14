@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
-
-import org.openjdk.jol.info.ClassLayout;
  
 class Index1 {
 	public enum Setting{
@@ -12,9 +10,9 @@ class Index1 {
 	}
 	
 	static Setting setting = Setting.search;
-	static int numRuns = 100;
-	static int numFiles =11;
-	static int startFile = 2;
+	static int numRuns = 3;
+	static int numFiles =12;
+	static int startFile = 11;
 	
 	int lookUpIndex = 1;
 	String[] lookUp;
