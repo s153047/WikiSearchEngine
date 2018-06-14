@@ -7,10 +7,10 @@ import org.openjdk.jol.info.ClassLayout;
  
 class Index1 {
 	public enum Setting{
-		normal, pre, search, col
+		normal, pre, search, col, correct
 	}
 	
-	static Setting setting = Setting.pre;
+	static Setting setting = Setting.correct;
 	static int numRuns = 10;
 	static int numFiles =12;
 	static int startFile =2;
@@ -390,6 +390,27 @@ class Index1 {
     			for(int i : list){
     				System.out.println(i);
     			}
+    		case correct :
+    			Index1 i = new Index1(args[startFile]);
+    			 try {
+    		        	Scanner input = new Scanner(new File(args[startFile]), "UTF-8");    
+    		            boolean check = true;
+    		        	String word;
+    		            while (input.hasNext()) {   // Read all words in input
+    		            	word = input.next().toLowerCase();
+    		            	if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
+    		                	  word = word.substring(0, word.length() - 1);
+    		                }
+    		            	if( i.search(word).length == 0){
+    		            		check = false;
+    		            	}
+    		            }
+    		            input.close();
+    		        	System.out.println("Did all words exists? " + check);
+    		        	System.out.println("Nonsense word search: " + (i.search("%&/¤#%&¤/(%").length == 0));
+    		     } catch (FileNotFoundException e) {
+    		            System.out.println("Error reading file " + args[startFile]);
+    		     }
     			break;
     	}
     }
