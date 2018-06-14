@@ -227,6 +227,8 @@ class Index1 {
     public static long hashCode(String word,long a,long b, long c){
     	// b,c er random seeds fra [0,...,p-1], hvor p = 2^61-1
     	// a fra [1,...,p-1]
+    	return word.hashCode();
+    	/*
     	long h = 1;
 		long x;
 		long p = (1<<61)-1;
@@ -243,7 +245,7 @@ class Index1 {
 		h = (h & p) + (h >> 61);
 		h = (h == p) ? 0 : h;
 		
-    	return h ;
+    	return h ;*/
     }
  
     public int[] search(String searchstr) {
@@ -402,8 +404,8 @@ class Index1 {
     		                	  word = word.substring(0, word.length() - 1);
     		                }
     		            	if( i.search(word).length == 0){
-    		            		System.out.println(word);
-    		            		System.out.println(i.hashCode(word, i.currentHashTable.a, i.currentHashTable.b, i.currentHashTable.c) % i.currentHashTable.size);
+    		            		//System.out.println(word);
+    		            		//System.out.println(i.hashCode(word, i.currentHashTable.a, i.currentHashTable.b, i.currentHashTable.c) % i.currentHashTable.size);
     		            		check = false;
     		            	}
     		            }
