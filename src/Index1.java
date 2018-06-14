@@ -14,7 +14,7 @@ class Index1 {
 	
 	static Setting setting = Setting.correct;
 	static int numRuns = 1;
-	static int numFiles =9;
+	static int numFiles =4;
 	static int startFile = 2;
 	
     String document;
@@ -192,7 +192,7 @@ class Index1 {
                       
                     
                  }
-            	currentHashTable.insert(word);
+                if(input.hasNext()) 	currentHashTable.insert(word);
             }
             
            System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
@@ -379,7 +379,8 @@ class Index1 {
     		            	if (word.endsWith(",") || word.endsWith(".") || word.endsWith("?") || word.endsWith("!")) {
     		                	  word = word.substring(0, word.length() - 1);
     		                }
-    		            	if( i.search(word).size() == 0){
+    		            	if( i.search(word).size() == 0 && !word.equals("---end.of.document---")){
+    		            		System.out.println(word);
     		            		check = false;
     		            	}
     		            }
