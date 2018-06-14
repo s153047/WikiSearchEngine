@@ -8,10 +8,10 @@ class Index1 {
 		normal, pre, search,col 
 	}
 	
-	static Setting setting = Setting.pre;
-	static int numRuns = 1;
-	static int numFiles =2;
-	static int startFile = 1;
+	static Setting setting = Setting.search;
+	static int numRuns = 100;
+	static int numFiles =11;
+	static int startFile = 2;
 	
     String document;
     HashTable currentHashTable;
@@ -48,20 +48,11 @@ class Index1 {
     		str = s;
     		next = n;
     	}
-    	
-    	public DocItem getLast(){
-    		DocItem current = this;
-    		while(current.next != null){
-    			current = current.next;
-    		}
-    		return current;
-    	}
     }
     
     private class HashTable{
     	private final int size;
     	private int n = 0;
-    	private int d = 0;
     	WikiItem[] table; 
     	HashTable(int s){
     		size = s;
@@ -77,7 +68,6 @@ class Index1 {
     		DocItem tmpDocItem; 
     		if(currentWikiItem == null){ 								// no collision
     			n++;
-    			d++;
     			table[(word.hashCode() & 0x7fffffff) % size] = new WikiItem(word,new DocItem(document,null), null);			
     		} else {																// collision
     			while(true){
@@ -86,14 +76,12 @@ class Index1 {
     					if(currentWikiItem.docs.str.equals(document)){
     						return;
     					}
-    					d++;
     					tmpDocItem = new DocItem(document,currentWikiItem.docs);
     					currentWikiItem.docs = tmpDocItem;
     					return;
     					
     				} else if(currentWikiItem.next == null) {				// den er ikke i linked list
     					n++;
-    					d++;
     					currentWikiItem.next = new WikiItem(word,new DocItem(document,null), null);
     					return;
     				}
@@ -155,7 +143,6 @@ class Index1 {
                  	
                  	HashTable tmpHashTable = new HashTable(currentHashTable.size * 2);
                  	tmpHashTable.n = currentHashTable.n;
-                 	tmpHashTable.d = currentHashTable.d;
                  	
                  	for(int i = 0; i < currentHashTable.size; i++){									// loop igennem hashTable 
                  		currentWikiItem = currentHashTable.getIndex(i);
@@ -192,50 +179,8 @@ class Index1 {
 
             System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
             System.out.println((double)currentHashTable.n / currentHashTable.size);
-            System.out.println("L_d : " + currentHashTable.d);
             input.close();
 
-            
-            
-            
-            /*
-            WikiItem currentWikiItem;
-            int[] bucketList = new int[20];
-            int c,cIndex=0;
-            int cmax = 0;
-            for(int i = 0; i < currentHashTable.size; i++){
-            	currentWikiItem = currentHashTable.table[i];
-            	c = 0;
-            	while(currentWikiItem != null){
-            		c++;
-            		currentWikiItem = currentWikiItem.next;
-            	}
-            	if(c > cmax) {
-            		cmax = c;
-            		cIndex = i;
-            	}
-            	
-            	bucketList[c] ++;
-            	
-            }
-            System.out.println();
-
-            System.out.println(cmax);
-            System.out.println();
-            for(int i : bucketList){
-            	System.out.println(i);
-            }
-            System.out.println();
-            
-            
-            System.out.println();
-            currentWikiItem = currentHashTable.table[cIndex];
-            while(currentWikiItem != null){
-            	System.out.println(currentWikiItem.str);
-            	currentWikiItem = currentWikiItem.next;
-            }
-            System.out.println();
-            */
         } catch (FileNotFoundException e) {
             System.out.println("Error reading file " + filename);
         }
@@ -254,34 +199,6 @@ class Index1 {
 			currentWikiItem = currentWikiItem.next;
 		}
         return list;
-    }
-    
-    public int maxCollisions(){
-    	WikiItem currentWikiItem;
-        int c,cmax,ci;
-        cmax = 0;
-        ci = 0;
-        for(int i = 0; i < currentHashTable.size; i++){
-        	currentWikiItem = currentHashTable.table[i];
-        	c = 0;
-        	
-        	while(currentWikiItem != null){
-        		c++;
-        		currentWikiItem = currentWikiItem.next;
-        	}
-        	if(c > cmax){
-        		cmax = c;
-        		ci = i;
-        	}
-        }
-        System.out.println("cmax: "+cmax);
-        System.out.println("ci: "+ci);
-        currentWikiItem = currentHashTable.getIndex(ci);
-        while(currentWikiItem.next != null){
-        	System.out.print(currentWikiItem.str + " , ");
-        	currentWikiItem = currentWikiItem.next;
-        }
-        return cmax;
     }
  
     public static void normal(String[] args) {
@@ -333,8 +250,8 @@ class Index1 {
     	
     	for(int j = 0; j<numRuns; j++){
     		time = System.currentTimeMillis();
-    		for(int k = 0; k < 100; k++){
-    			i.search("%&/¤#%&¤/(%");
+    		for(int k = 0; k < 10000; k++){
+    			i.search("the");
     		}
     		timeList[j] = (int) (System.currentTimeMillis() - time);
     	}
