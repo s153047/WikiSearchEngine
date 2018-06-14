@@ -11,7 +11,7 @@ class Index1 {
 		normal, pre, search, col
 	}
 	
-	static Setting setting = Setting.normal;
+	static Setting setting = Setting.search;
 	static int numRuns = 10;
 	static int numFiles =11;
 	static int startFile = 2;
@@ -197,7 +197,7 @@ class Index1 {
                       
                     
                  }
-            	currentHashTable.insert(word);
+            	if(input.hasNext()) currentHashTable.insert(word);
             }
 
             System.out.print(currentHashTable.n + " / " + currentHashTable.size + " = ");
@@ -355,8 +355,8 @@ class Index1 {
     	
     	for(int j = 0; j<numRuns; j++){
     		time = System.currentTimeMillis();
-    		for(int k = 0; k < 100; k++){
-    			i.search("%&/¤#%&¤/(%");
+    		for(int k = 0; k < 10000; k++){
+    			i.search("the");
     		}
     		timeList[j] = (int) (System.currentTimeMillis() - time);
     	}
